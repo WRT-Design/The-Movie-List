@@ -1,0 +1,48 @@
+@import './base.css';
+
+/* main {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+} */
+
+#app {
+  margin: 0 auto;
+  padding: 0;
+  font-weight: normal;
+}
+
+a,
+.orange {
+  text-decoration: none;
+  color: var(--tml-orange);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+/* For all main content pages setup css */
+.main,
+.browse,
+.profile,
+.settings,
+.rating {
+  margin-left: max(25%, 200px);
+  min-height: 100vh;
+  background-color: var(--tml-black);
+  color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Raleway', sans-serif;
+}
+
+/* a:hover {
+  background-color: #f5901542;
+} */
+
+@media (min-width: 1024px) {
+}
