@@ -3,14 +3,27 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // create a new star
+  /**
+   * Creates a new star and connects the star to the user and the post type it is tied to.
+   *
+   */
   app.post("/api/star", user.createOne);
 
-  // get all stars for one user
-  // app.get("/api/star/:userId", user.findAllUserStars);
+  /**
+   * Gets all the stars tied to a user or post
+   *
+   * @param {String} id The id of the user or post
+   * @param {String} type userId || postId || commentId || ratingId
+   */
+  app.get("/api/star/:id&:type", user.findAllStars);
 
-  // // delete one star
-  // app.delete("/api/star/:starId", user.deleteOne);
+  /**
+   * Deletes one or more stars from the database
+   *
+   * @param {String} delId The id of the document to delete
+   * @param {String} type one || all
+   */
+  app.delete("/api/star/:delId&:type", user.deleteOne);
 
   app.use("/api/star", router);
 };

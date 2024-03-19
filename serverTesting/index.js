@@ -73,11 +73,11 @@ async function testEndpoints() {
   // console.log("DELETE Result Status: ", delResult.status);
 }
 
-testStarEndpoints();
-async function testStarEndpoints() {
+testStarEndpoints("star");
+async function testStarEndpoints(point) {
   let star;
   // post
-  const postResult = await fetch(`${url}${ep}/star`, {
+  const postResult = await fetch(`${url}${ep}/${point}`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
@@ -88,7 +88,58 @@ async function testStarEndpoints() {
   })
     .then((res) => res.json())
     .then((result) => {
-      post = result.post;
+      star = result.star;
     });
-  console.log("POST Result Status: ", post);
+  console.log("POST Result Status: ", star);
+
+  // get all stars for a user
+  let getAllResult;
+  await fetch(`${url}${ep}/${point}/${userId}&userId`, {
+    method: "GET",
+    headers: headers,
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      getAllResult = result.result;
+    });
+  console.log("GET All Result Status: ", getAllResult);
+  // console.log("GET All Result: ", getAllResult);
+
+  // put
+  // let putResult;
+  // await fetch(`${url}${ep}/${point}/${star.id}?type=newStar&userId=${userId}`, {
+  //   method: "PUT",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+  //   .then((res) => res.json())
+  //   .then((result) => {
+  //     putResult = result.message;
+  //   });
+  // console.log("PUT Result Status: ", putResult);
+
+  // delete one
+  // let delResult1;
+  // await fetch(`${url}${ep}/${point}/${star.id}&one`, {
+  //   method: "delete",
+  //   headers: headers,
+  // })
+  //   .then((res) => res.json())
+  //   .then((result) => {
+  //     delResult1 = result.message;
+  //   });
+  // console.log("DELETE Result Status: ", delResult1);
+
+  // delete all
+  // let delResult2;
+  // await fetch(`${url}${ep}/${point}/${postId}&all`, {
+  //   method: "delete",
+  //   headers: headers,
+  // })
+  //   .then((res) => res.json())
+  //   .then((result) => {
+  //     delResult2 = result.message;
+  //   });
+  // console.log("DELETE Result Status: ", delResult2);
 }
