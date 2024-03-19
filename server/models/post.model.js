@@ -8,6 +8,7 @@ const Post = function (post) {
 };
 
 Post.create = async (newPost, userId, result) => {
+  console.log("postmodel");
   try {
     // primsa query here
     console.log("newPost: ", newPost);
@@ -32,7 +33,7 @@ Post.create = async (newPost, userId, result) => {
       },
     });
 
-    return true;
+    return postRes;
   } catch (err) {
     console.error(err);
     await prisma.$disconnect();
@@ -40,9 +41,81 @@ Post.create = async (newPost, userId, result) => {
     await prisma.$disconnect();
   }
 };
-Post.update = async (user, fields) => {
+Post.update = async (postId, type, userId, options) => {
   try {
     // primsa query here
+    switch (type) {
+      case "newStar":
+        await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            stars: {
+              connect: {
+                id: userId,
+              },
+            },
+            tot_stars: {
+              increment: 1,
+            },
+          },
+        });
+        break;
+      case "delStar":
+        // query for the full list of stars
+        const stars = await prisma.post.findMany({
+          where: {
+            id: postId,
+          },
+          include: {
+            stars: true,
+          },
+        });
+        console.log("\n\n stars: ", stars, "\n\n");
+        // copy the list/remove the matching user id
+        // set the data.stars to the new list
+        await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            stars: {
+              push: userId,
+            },
+            tot_stars: {
+              decrement: 1,
+            },
+          },
+        });
+        break;
+      case "newComment":
+        await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            comments: {
+              push: options.postId,
+            },
+          },
+        });
+        break;
+      case "delComment":
+        await prisma.post.update({
+          where: {
+            id: postId,
+          },
+          data: {
+            userId: null,
+            type: "delComment",
+          },
+        });
+        break;
+      case "newLike":
+      default:
+        break;
+    }
     console.log("updated post");
     return true;
   } catch (err) {

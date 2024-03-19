@@ -25,13 +25,29 @@ exports.createOne = async (req, res) => {
   } else {
     res.status(200).send({
       message: "Post created successfully",
+      post: createResult,
     });
   }
 };
 
 exports.findOne = async (req, res) => {};
 
-exports.update = async (req, res) => {};
+exports.update = async (req, res) => {
+  const postId = req.params.postId;
+  const query = req.query;
+  console.log("req.query: ", query);
+  let options = "";
+
+  let type = query.type;
+  if (!query.type) {
+    res.status(400).send({
+      err: "error",
+      message: "No type provided",
+    });
+  }
+
+  const result = await Post.update(postId, type, query.userId, options);
+};
 
 exports.findAll = async (req, res) => {};
 

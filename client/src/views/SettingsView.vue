@@ -1,5 +1,5 @@
 <script setup>
-import NavC from '../components/NavC.vue'
+import NavC from "../components/NavC.vue";
 </script>
 
 <template>
@@ -20,31 +20,31 @@ export default {
   data() {
     return {
       auth: this.$auth0.isAuthenticated,
-      user: this.$auth0.user
-    }
+      user: this.$auth0.user,
+    };
   },
   beforeMount() {
     // use this to check if a user is already logged in
     if (!this.auth) {
       // user is not authenticated && redirect
-      this.$router.push('/')
+      this.$router.push("/");
     }
   },
   methods: {
     deleteAccount() {
-      const username = document.querySelector('#deleteAccount').value
+      const username = document.querySelector("#deleteAccount").value;
       fetch(`http://localhost:3000/api/user/${username}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
     },
     authCheck() {
-      console.log('user: ', this.user)
+      console.log("user: ", this.user);
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
