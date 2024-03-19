@@ -70,7 +70,6 @@ Star.create = async (newStar, type) => {
     return star;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -88,7 +87,6 @@ Star.getAllStars = async (id, type) => {
     return allStars;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -106,7 +104,6 @@ Star.deleteOne = async (starId) => {
     return result;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -124,7 +121,6 @@ Star.deleteAll = async (postId) => {
     return result;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }

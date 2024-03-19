@@ -1,13 +1,14 @@
 /*
 Server stuff to accomplish today
   1. User
-  2. Movie  TODO:
+  7. Star
+  2. Movie     TODO:
   3. Settings  TODO:
-  4. Ratings  TODO:
-  5. Post  TODO:
-  6. Comment  TODO:
-                          7. Star  TODO:
-  8. Follower  TODO:
+  4. Ratings   TODO:
+  5. Post      TODO:
+  6. Comment   TODO:
+    8. Follows  TODO:
+        Current: delete one
 
 
 */
@@ -17,7 +18,8 @@ const headers = {
 };
 const url = "http://localhost:8080";
 const ep = "/api";
-const userId = "65d54aec0bc3558436646232";
+const userId1 = "65d54aec0bc3558436646232";
+const userId2 = "65f9f86220f26d34b965d9f1";
 const postId = "65e009a44e6777949abd49dd";
 
 // testEndpoints();
@@ -73,7 +75,7 @@ async function testEndpoints() {
   // console.log("DELETE Result Status: ", delResult.status);
 }
 
-testStarEndpoints("star");
+// testStarEndpoints("star");
 async function testStarEndpoints(point) {
   let star;
   // post
@@ -81,7 +83,7 @@ async function testStarEndpoints(point) {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
-      user: userId,
+      user: userId1,
       type: "post",
       postId: postId,
     }),
@@ -142,4 +144,35 @@ async function testStarEndpoints(point) {
   //     delResult2 = result.message;
   //   });
   // console.log("DELETE Result Status: ", delResult2);
+}
+
+testFollows();
+async function testFollows() {
+  // user follows another user
+  // let followRes;
+  // await fetch(`${url}${ep}/follows`, {
+  //   method: "POST",
+  //   headers: headers,
+  //   body: JSON.stringify({
+  //     followerId: userId1,
+  //     followingId: userId2,
+  //   }),
+  // })
+  //   .then((res) => res.json())
+  //   .then((result) => {
+  //     followRes = result;
+  //   });
+  // console.log(followRes);
+
+  // user unfollows another user
+  let followDelRes;
+  await fetch(`${url}${ep}/follows/${userId1}&all`, {
+    method: "DELETE",
+    headers: headers,
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      followDelRes = result;
+    });
+  console.log(followDelRes);
 }
