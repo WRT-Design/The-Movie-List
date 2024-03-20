@@ -5,7 +5,7 @@ Server stuff to accomplish today
   3. Settings
   8. Follows
   2. Movie     TODO:
-  4. Ratings   TODO:
+    4. Ratings   TODO:
   5. Post      TODO:
   6. Comment   TODO:
 
@@ -20,6 +20,7 @@ const ep = "/api";
 const userId1 = "65d54aec0bc3558436646232";
 const userId2 = "65f9f86220f26d34b965d9f1";
 const postId = "65e009a44e6777949abd49dd";
+const ratingId = "65faeffbbde6df9017155a11";
 
 // testEndpoints();
 async function testEndpoints() {
@@ -145,7 +146,7 @@ async function testStarEndpoints(point) {
   // console.log("DELETE Result Status: ", delResult2);
 }
 
-testFollows();
+// testFollows();
 async function testFollows() {
   // user follows another user
   // let followRes;
@@ -176,9 +177,23 @@ async function testFollows() {
   console.log(followDelRes);
 }
 
+testRatings();
+async function testRatings() {
+  // update rating
+  await fetch(`${url}${ep}/rating/${ratingId}`, {
+    method: "PUT",
+    headers: headers,
+    body: JSON.stringify({
+      theme: 5,
+      personalScore: 5,
+    }),
+  });
+}
+
 // testSettings();
 async function testSettings() {
-  // new settings
+  // new setting
+
   // let settingsResult;
   // await fetch(`${url}${ep}/settings`, {
   //   method: "POST",

@@ -109,16 +109,16 @@ exports.utils = {
 
     data = {
       avg_overall: averages.length == 0 ? 0 : averages.length,
-      avg_acting: avg_acting == 0 ? null : avg_acting,
-      avg_attraction: avg_attraction == 0 ? null : avg_attraction,
-      avg_cinemetography: avg_cinemetography == 0 ? null : avg_cinemetography,
-      avg_dialogue: avg_dialogue == 0 ? null : avg_dialogue,
-      avg_directing: avg_directing == 0 ? null : avg_directing,
-      avg_editing: avg_editing == 0 ? null : avg_editing,
-      avg_plot: avg_plot == 0 ? null : avg_plot,
-      avg_soundtrack: avg_soundtrack == 0 ? null : avg_soundtrack,
-      avg_specialEffects: avg_specialEffects == 0 ? null : avg_specialEffects,
-      avg_theme: avg_theme == 0 ? null : avg_theme,
+      avg_acting: avg_acting == null ? 0 : avg_acting,
+      avg_attraction: avg_attraction == null ? 0 : avg_attraction,
+      avg_cinemetography: avg_cinemetography == null ? 0 : avg_cinemetography,
+      avg_dialogue: avg_dialogue == null ? 0 : avg_dialogue,
+      avg_directing: avg_directing == null ? 0 : avg_directing,
+      avg_editing: avg_editing == null ? 0 : avg_editing,
+      avg_plot: avg_plot == null ? 0 : avg_plot,
+      avg_soundtrack: avg_soundtrack == null ? 0 : avg_soundtrack,
+      avg_specialEffects: avg_specialEffects == null ? 0 : avg_specialEffects,
+      avg_theme: avg_theme == null ? 0 : avg_theme,
     };
 
     return data;

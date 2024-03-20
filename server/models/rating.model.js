@@ -14,7 +14,6 @@ Rating.create = async (newRating) => {
     return rating;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -32,8 +31,24 @@ Rating.getAllRatings = async (type, id) => {
     return allRatings;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
     return null;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+Rating.update = async (ratingId, fields) => {
+  try {
+    await prisma.rating.update({
+      where: {
+        id: ratingId,
+      },
+      data: fields,
+    });
+    console.log("updated rating");
+    return true;
+  } catch (err) {
+    console.error(err);
   } finally {
     await prisma.$disconnect();
   }
@@ -50,7 +65,6 @@ Rating.del = async (ratingId) => {
     return { result: "Rating deleted successfully" };
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
     return { err: err };
   } finally {
     await prisma.$disconnect();

@@ -36,7 +36,6 @@ Post.create = async (newPost, userId, result) => {
     return postRes;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -120,7 +119,6 @@ Post.update = async (postId, type, userId, options) => {
     return true;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -131,7 +129,6 @@ Post.findBy = async (paramName, paramVal) => {
     return result;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
   } finally {
     await prisma.$disconnect();
   }
@@ -143,7 +140,6 @@ Post.getAll = async () => {
     return allUsers;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
     return null;
   } finally {
     await prisma.$disconnect();
@@ -161,7 +157,6 @@ Post.getAllUserPosts = async (userId) => {
     return allUserPosts;
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
     return null;
   } finally {
     await prisma.$disconnect();
@@ -179,7 +174,6 @@ Post.del = async (postId) => {
     return { result: "Post deleted successfully" };
   } catch (err) {
     console.error(err);
-    await prisma.$disconnect();
     return { err: err };
   } finally {
     await prisma.$disconnect();

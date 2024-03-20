@@ -3,19 +3,34 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // create a new rating
+  /**
+   * Creates a new rating
+   */
   app.post("/api/rating", rating.createOne);
 
-  // get all ratings for one user
+  /**
+   * Gets all the ratings for a movie or user
+   *
+   * @param {String} ratingType movie || user
+   */
   app.get("/api/rating/:ratingType", rating.findAllRatingsFor);
 
-  // // put a change for a rating
-  // app.put("/api/rating/:ratingId", rating.update);
+  /**
+   * Updates a rating
+   *
+   * @param {String} ratingId Id of the rating
+   * @body {Object} fields to update
+   */
+  app.put("/api/rating/:ratingId", rating.update);
 
   // // get all rating
   // app.get("/api/rating", rating.findAll);
 
-  // delete one rating
+  /**
+   * Deletes a rating
+   *
+   * @param {String} ratingId Id of the rating
+   */
   app.delete("/api/rating/:ratingId", rating.deleteOne);
 
   app.use("/api/rating", router);
