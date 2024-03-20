@@ -2,13 +2,12 @@
 Server stuff to accomplish today
   1. User
   7. Star
+  3. Settings
+  8. Follows
   2. Movie     TODO:
-  3. Settings  TODO:
   4. Ratings   TODO:
   5. Post      TODO:
   6. Comment   TODO:
-    8. Follows  TODO:
-        Current: delete one
 
 
 */
@@ -166,7 +165,7 @@ async function testFollows() {
 
   // user unfollows another user
   let followDelRes;
-  await fetch(`${url}${ep}/follows/${userId1}&all`, {
+  await fetch(`${url}${ep}/follows/${userId1}&${userId2}&one`, {
     method: "DELETE",
     headers: headers,
   })
@@ -175,4 +174,40 @@ async function testFollows() {
       followDelRes = result;
     });
   console.log(followDelRes);
+}
+
+// testSettings();
+async function testSettings() {
+  // new settings
+  // let settingsResult;
+  // await fetch(`${url}${ep}/settings`, {
+  //   method: "POST",
+  //   headers: headers,
+  //   body: JSON.stringify({
+  //     user: userId1,
+  //   }),
+  // });
+
+  // updated settings
+  // await fetch(`${url}${ep}/settings/${userId1}&222222222`, {
+  //   method: "PUT",
+  //   headers: headers,
+  // });
+
+  // get settings
+  // let settingsResult;
+  // await fetch(`${url}${ep}/settings/${userId1}`, {
+  //   method: "GET",
+  //   headers: headers,
+  // })
+  //   .then((res) => res.json())
+  //   .then((result) => {
+  //     settingsResult = result;
+  //   });
+  // console.log(settingsResult);
+  // dellete settings
+  await fetch(`${url}${ep}/settings/${userId1}`, {
+    method: "DELETE",
+    headers: headers,
+  });
 }

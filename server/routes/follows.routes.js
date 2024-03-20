@@ -17,5 +17,5 @@ module.exports = (app) => {
    * @param {String} id Id of the account who unfollowed
    * @param {String} type 'one' || 'all'
    */
-  app.delete("/api/follows/:id&:type", follows.delete);
+  app.delete("/api/follows/:delId&:otherId&:type", follows.delete);
 };

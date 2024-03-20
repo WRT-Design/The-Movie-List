@@ -26,11 +26,12 @@ exports.createOne = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  const id = req.params.id;
+  const delId = req.params.delId;
+  const otherId = req.params.otherId;
   const type = req.params.type;
 
   if (type === "one") {
-    let result = await Follows.deleteOne(id);
+    let result = await Follows.deleteOne(delId, otherId);
     if (!result) {
       res.status(500).send({
         err: "error",
@@ -43,7 +44,7 @@ exports.delete = async (req, res) => {
     }
   }
   if (type === "all") {
-    let result = await Follows.deleteAll(id);
+    let result = await Follows.deleteAll(delId);
     if (!result) {
       res.status(500).send({
         err: "error",

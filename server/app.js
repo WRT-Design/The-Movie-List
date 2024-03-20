@@ -39,6 +39,7 @@ require("./routes/post.routes.js")(app);
 require("./routes/rating.routes.js")(app);
 require("./routes/movie.routes.js")(app);
 require("./routes/star.routes.js")(app);
+require("./routes/settings.routes.js")(app);
 require("./routes/follows.routes.js")(app);
 
 // catch 404 and forward to error handler

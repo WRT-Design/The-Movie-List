@@ -19,12 +19,15 @@ Follows.create = async (newFollows) => {
   }
 };
 
-Follows.deleteOne = async (delId) => {
+Follows.deleteOne = async (delId, otherId) => {
   try {
     console.log("delId: ", delId);
-    let result = await prisma.follows.delete({
+    let result = await prisma.follows.deleteMany({
       where: {
-        followerId: delId,
+        AND: {
+          followerId: delId,
+          followingId: otherId,
+        },
       },
     });
     console.log("deleted follows");
