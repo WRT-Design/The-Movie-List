@@ -37,16 +37,63 @@ Rating.getAllRatings = async (type, id) => {
   }
 };
 
-Rating.update = async (ratingId, fields) => {
+Rating.update = async (ratingId, fields, type) => {
   try {
-    await prisma.rating.update({
-      where: {
-        id: ratingId,
-      },
-      data: fields,
-    });
+    let result;
+    if (!type) {
+      result = await prisma.rating.update({
+        where: {
+          id: ratingId,
+        },
+        data: fields,
+      });
+    } else if (type === "newStar") {
+      result = await prisma.rating.update({
+        where: {
+          id: ratingId,
+        },
+        data: {
+          tot_stars: {
+            increment: 1,
+          },
+          stars: {
+            push: fields.starId,
+          },
+        },
+      });
+    } else if (type === "delStar") {
+      // get the star array from the rating
+      const res = await prisma.rating.findUnique({
+        where: {
+          id: ratingId,
+        },
+        select: {
+          stars: true,
+        },
+      });
+      const stars = res.stars;
+      console.log("stars: ", stars);
+      // delete the star with the matching id from the array
+      let index = stars.indexOf(fields.starId);
+      if (index !== -1) {
+        stars.splice(index, 1);
+      }
+      // update the rating with the new array
+      result = await prisma.rating.update({
+        where: {
+          id: ratingId,
+        },
+        data: {
+          stars: stars,
+          tot_stars: {
+            decrement: 1,
+          },
+        },
+      });
+    }
     console.log("updated rating");
-    return true;
+
+    return result;
   } catch (err) {
     console.error(err);
   } finally {

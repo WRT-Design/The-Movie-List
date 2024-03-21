@@ -4,9 +4,9 @@ Server stuff to accomplish today
   7. Star
   3. Settings
   8. Follows
-  2. Movie     TODO:
-    4. Ratings   TODO:
-  5. Post      TODO:
+  4. Ratings   
+  2. Movie 
+    5. Post      TODO:
   6. Comment   TODO:
 
 
@@ -180,12 +180,11 @@ async function testFollows() {
 testRatings();
 async function testRatings() {
   // update rating
-  await fetch(`${url}${ep}/rating/${ratingId}`, {
+  await fetch(`${url}${ep}/rating/65faef78d79bbd1d58f17df9?type=delStar`, {
     method: "PUT",
     headers: headers,
     body: JSON.stringify({
-      theme: 5,
-      personalScore: 5,
+      starId: "65f9f2a971a09de74a1b3f1a",
     }),
   });
 }
@@ -194,14 +193,14 @@ async function testRatings() {
 async function testSettings() {
   // new setting
 
-  // let settingsResult;
-  // await fetch(`${url}${ep}/settings`, {
-  //   method: "POST",
-  //   headers: headers,
-  //   body: JSON.stringify({
-  //     user: userId1,
-  //   }),
-  // });
+  let settingsResult;
+  await fetch(`${url}${ep}/settings`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      user: userId1,
+    }),
+  });
 
   // updated settings
   // await fetch(`${url}${ep}/settings/${userId1}&222222222`, {

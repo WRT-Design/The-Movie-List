@@ -134,44 +134,53 @@ exports.createOne = async (req, res) => {
 exports.update = async (req, res) => {
   // update a rating
   const ratingId = req.params.ratingId;
+  const type = req.query.type;
   const body = req.body;
+  let result;
 
   let fields = {};
   for (let field in body) {
     fields[field] = body[field];
   }
 
-  const result = await Rating.update(ratingId, fields);
+  if (!type) {
+    result = await Rating.update(ratingId, fields);
 
-  // get the movie id *
+    // update the movie
+    let movieRatings;
 
+    await fetch(`http://localhost:8080/api/rating/movie?id=${result.movieId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        movieRatings = result.result;
+      });
 
-  let movieRatings;
+    console.log("movieRatings: ", movieRatings);
 
-  await fetch(`http://localhost:8080/api/rating/movie?id=${movieId}`, {
-    method: "GET",  
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      movieRatings = result.result;
-    });
+    let avg = Util.utils.getAverage(movieRatings);
 
-  let avg = Util.utils.getAverage(movieRatings);
-
-  await fetch(`http://localhost:8080/api/movie/${movieId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(avg),
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      console.log("updated movie: ", result);
-    });
+    await fetch(`http://localhost:8080/api/movie/${result.movieId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(avg),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log("updated movie: ", result);
+      });
+  } else if (type === "newStar") {
+    // just a star
+    result = await Rating.update(ratingId, fields, type);
+  } else if (type === "delStar") {
+    result = await Rating.update(ratingId, fields, type);
+  }
 
   if (!result) {
     res.status(500).send({ message: "Error when updating rating." });
