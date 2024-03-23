@@ -11,6 +11,24 @@ Rating.create = async (newRating) => {
     console.log("newRating: ", newRating);
     let rating = await prisma.rating.create(newRating);
     console.log("created rating");
+
+    // connect the rating
+    const connectRes = await prisma.user.update({
+      where: {
+        id: newRating.userId,
+      },
+      data: {
+        posts: {
+          connect: {
+            id: rating.id,
+          },
+        },
+      },
+      include: {
+        ratings: true,
+      },
+    });
+
     return rating;
   } catch (err) {
     console.error(err);
@@ -57,18 +75,27 @@ Rating.update = async (ratingId, fields, type) => {
             increment: 1,
           },
           stars: {
-            push: fields.starId,
+            connect: {
+              id: fields.starId,
+            },
           },
         },
       });
     } else if (type === "delStar") {
       // get the star array from the rating
-      const res = await prisma.rating.findUnique({
+      const res = await prisma.rating.update({
         where: {
           id: ratingId,
         },
-        select: {
-          stars: true,
+        data: {
+          stars: {
+            disconnect: {
+              id: fields.starId,
+            },
+          },
+          tot_stars: {
+            decrement: 1,
+          },
         },
       });
       const stars = res.stars;

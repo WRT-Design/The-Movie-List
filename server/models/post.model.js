@@ -42,7 +42,6 @@ Post.create = async (newPost, userId, result) => {
 };
 Post.update = async (postId, type, userId, options) => {
   try {
-    // primsa query here
     switch (type) {
       case "newStar":
         await prisma.post.update({
@@ -52,7 +51,7 @@ Post.update = async (postId, type, userId, options) => {
           data: {
             stars: {
               connect: {
-                id: userId,
+                id: options.starId,
               },
             },
             tot_stars: {
@@ -62,25 +61,15 @@ Post.update = async (postId, type, userId, options) => {
         });
         break;
       case "delStar":
-        // query for the full list of stars
-        const stars = await prisma.post.findMany({
-          where: {
-            id: postId,
-          },
-          include: {
-            stars: true,
-          },
-        });
-        console.log("\n\n stars: ", stars, "\n\n");
-        // copy the list/remove the matching user id
-        // set the data.stars to the new list
-        await prisma.post.update({
+        result = await prisma.post.update({
           where: {
             id: postId,
           },
           data: {
             stars: {
-              push: userId,
+              disconnect: {
+                id: options.starId,
+              },
             },
             tot_stars: {
               decrement: 1,

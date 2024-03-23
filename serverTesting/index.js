@@ -6,8 +6,14 @@ Server stuff to accomplish today
   8. Follows
   4. Ratings   
   2. Movie 
-    5. Post      TODO:
+  5. Post      
   6. Comment   TODO:
+    - comment updates
+      - comment threads/replies
+      - change the schema?
+    - getting comments 
+      - users, posts, ratings, comments, etc.
+  9. Reply TODO: 
 
 
 */
@@ -177,15 +183,40 @@ async function testFollows() {
   console.log(followDelRes);
 }
 
-testRatings();
+// testRatings();
 async function testRatings() {
   // update rating
-  await fetch(`${url}${ep}/rating/65faef78d79bbd1d58f17df9?type=delStar`, {
+  await fetch(`${url}${ep}/post/${postId}?type=newStar`, {
     method: "PUT",
     headers: headers,
     body: JSON.stringify({
       starId: "65f9f2a971a09de74a1b3f1a",
     }),
+  });
+}
+
+testComments();
+async function testComments() {
+  // await fetch(`${url}${ep}/comment/`, {
+  //   method: "POST",
+  //   headers: headers,
+  //   body: JSON.stringify({
+  //     comment: "this is a test comment",
+  //     user: userId1,
+  //     post: postId,
+  //     postType: "postId",
+  //   }),
+  // });
+  await fetch(`${url}${ep}/comment/65fd871aa6e88c9ab7af7c45&delComment`, {
+    method: "PUT",
+    headers: headers,
+    body: JSON.stringify({
+      commentId: "65fd88d5eed61182a3b9731c",
+    }),
+  });
+  await fetch(`${url}${ep}/comment/65fd871aa6e88c9ab7af7c45`, {
+    method: "GET",
+    headers: headers,
   });
 }
 

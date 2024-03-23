@@ -35,12 +35,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 require("./routes/user.routes.js")(app);
+require("./routes/movie.routes.js")(app);
 require("./routes/post.routes.js")(app);
 require("./routes/rating.routes.js")(app);
-require("./routes/movie.routes.js")(app);
+require("./routes/comment.routes.js")(app);
 require("./routes/star.routes.js")(app);
 require("./routes/settings.routes.js")(app);
 require("./routes/follows.routes.js")(app);
+require("./routes/reply.routes.js")(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

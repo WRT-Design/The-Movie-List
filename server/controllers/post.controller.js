@@ -35,8 +35,8 @@ exports.findOne = async (req, res) => {};
 exports.update = async (req, res) => {
   const postId = req.params.postId;
   const query = req.query;
+  const body = req.body;
   console.log("req.query: ", query);
-  let options = "";
 
   let type = query.type;
   if (!query.type) {
@@ -46,7 +46,7 @@ exports.update = async (req, res) => {
     });
   }
 
-  const result = await Post.update(postId, type, query.userId, options);
+  const result = await Post.update(postId, type, query.userId, body);
 };
 
 exports.findAll = async (req, res) => {};

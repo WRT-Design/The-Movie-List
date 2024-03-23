@@ -27,6 +27,11 @@ exports.utils = {
     if (!passwordRegex.test(password)) return false;
     return true;
   },
+  validateInput(input) {
+    // sanitize and sterilize input
+    // trim input
+    return input;
+  },
   // encryption
   encrypt(password) {
     // encrupt password and send it back
