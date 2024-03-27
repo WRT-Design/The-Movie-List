@@ -1,7 +1,7 @@
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-defineProps(['rating', 'picURL', 'name', 'username'])
+defineProps(["rating", "picURL", "name", "username"]);
 </script>
 
 <template>
@@ -29,13 +29,17 @@ defineProps(['rating', 'picURL', 'name', 'username'])
     <td>{{ rating.review }}</td>
   </section>
   <section class="ratingFooter">
-    <button type="button" id="delBtnRating" @click="deleteRating($event, rating.id, rating.movieId)">
+    <button
+      type="button"
+      id="delBtnRating"
+      @click="deleteRating($event, rating.id, rating.movieId)"
+    >
       <FontAwesomeIcon icon="fa-regular fa-trash-can" />
     </button>
 
     <button type="button" id="starBtn">
-      <!-- <FontAwesomeIcon icon="fa-solid fa-star" id="starIcon" /> -->
-      <FontAwesomeIcon icon="fa-regular fa-star" />
+      <!-- <FontAwesomeIcon icon="fa-solid fa-heart" id="starIcon" /> -->
+      <FontAwesomeIcon icon="fa-regular fa-heart" />
     </button>
     <button type="button" id="commentBtn">
       <FontAwesomeIcon icon="fa-regular fa-message" />
@@ -47,24 +51,25 @@ defineProps(['rating', 'picURL', 'name', 'username'])
 export default {
   methods: {
     deleteRating(e, ratingId, movieId) {
-      // remove from UI 
-      e.target.parentElement.remove()
+      // remove from UI
+      e.target.parentElement.remove();
 
-      console.log('ratingId: ', ratingId)
+      console.log("ratingId: ", ratingId);
 
       // do a fetch to remove from the DB
       fetch(`http://localhost:8080/api/rating/${ratingId}?movieId=${movieId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((res) => res.json())
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
         .then((result) => {
-          console.log(result)
-        })
+          console.log(result);
+        });
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -95,6 +100,6 @@ button {
 }
 
 #starIcon {
-  color: var(--tml-orange)
+  color: var(--tml-orange);
 }
 </style>

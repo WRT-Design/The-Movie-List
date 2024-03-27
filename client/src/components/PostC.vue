@@ -1,14 +1,18 @@
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-defineProps(['content', 'postId', 'picURL', 'name', 'username', 'date'])
+defineProps(["content", "postId", "picURL", "name", "username", "date"]);
 </script>
 
 <template>
   <li>
     <section class="postHeader">
-      <img src="https://lh3.googleusercontent.com/a/ACg8ocIFJTkb-LmMUiS3V9Cg3fZL9jkJ8SO2BEqDF30W0Zgetic=s96-c"
-        alt="avatar" width="40px" height="40px">
+      <img
+        src="https://lh3.googleusercontent.com/a/ACg8ocIFJTkb-LmMUiS3V9Cg3fZL9jkJ8SO2BEqDF30W0Zgetic=s96-c"
+        alt="avatar"
+        width="40px"
+        height="40px"
+      />
       <span id="name">{{ name }}</span>
       <span id="username">@{{ username }}</span>
       <span id="date">{{ date }}</span>
@@ -22,8 +26,8 @@ defineProps(['content', 'postId', 'picURL', 'name', 'username', 'date'])
       </button>
 
       <button type="button" id="starBtn">
-        <!-- <FontAwesomeIcon icon="fa-solid fa-star" id="starIcon" /> -->
-        <FontAwesomeIcon icon="fa-regular fa-star" />
+        <!-- <FontAwesomeIcon icon="fa-solid fa-heart" id="starIcon" /> -->
+        <FontAwesomeIcon icon="fa-regular fa-heart" />
       </button>
       <button type="button" id="commentBtn">
         <FontAwesomeIcon icon="fa-regular fa-message" />
@@ -36,22 +40,23 @@ defineProps(['content', 'postId', 'picURL', 'name', 'username', 'date'])
 export default {
   methods: {
     deletePost(e, postId) {
-      // remove from UI 
-      e.target.parentElement.remove()
+      // remove from UI
+      e.target.parentElement.remove();
 
       // do a fetch to remove from the DB
       fetch(`http://localhost:8080/api/post/${postId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((res) => res.json())
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
         .then((result) => {
-          console.log(result)
-        })
+          console.log(result);
+        });
     },
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -82,6 +87,6 @@ button {
 }
 
 #starIcon {
-  color: var(--tml-orange)
+  color: var(--tml-orange);
 }
 </style>
