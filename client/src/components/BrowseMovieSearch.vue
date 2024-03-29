@@ -48,8 +48,14 @@ defineEmits(["newRating"]);
             class="p-2"
           />
           <div class="p-2">
-            <!-- TODO: change to be a link to the movie's page -->
-            <h3 class="movieTitle">{{ movie.titleText.text }}</h3>
+            <h3 class="movieTitle">
+              <RouterLink
+                class="orange"
+                :to="{ name: 'movie', params: { movieId: movie.id } }"
+                >{{ movie.titleText.text }}</RouterLink
+              >
+            </h3>
+
             <h4 v-if="movie.releaseDate">
               {{ getMonth(movie.releaseDate.month) }}
               {{ movie.releaseDate.day }},
