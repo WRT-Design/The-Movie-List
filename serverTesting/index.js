@@ -195,7 +195,7 @@ async function testRatings() {
   });
 }
 
-testComments();
+// testComments();
 async function testComments() {
   // await fetch(`${url}${ep}/comment/`, {
   //   method: "POST",
@@ -255,4 +255,22 @@ async function testSettings() {
     method: "DELETE",
     headers: headers,
   });
+}
+
+testAPI();
+
+async function testAPI() {
+  const result = await fetch(
+    "http://localhost:8080/api/moviesAPI/search/inception",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((result) => {
+      console.log(result);
+    });
 }

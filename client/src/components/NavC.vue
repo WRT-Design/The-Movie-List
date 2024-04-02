@@ -380,7 +380,7 @@ export default {
       console.log("Movie Title: ", movieTitle);
 
       let user;
-      await fetch(`http://localhost:8080/api/user/${username}`, {
+      await fetch(`/api/api/user/${username}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -411,7 +411,7 @@ export default {
         review: this.review,
       };
 
-      await fetch(`http://localhost:8080/api/rating`, {
+      await fetch(`/api/api/rating`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -444,7 +444,7 @@ export default {
       const username = this.$auth0.user._rawValue.nickname;
 
       let user;
-      await fetch(`http://localhost:8080/api/user/${username}`, {
+      await fetch(`/api/api/user/${username}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -463,7 +463,7 @@ export default {
       };
 
       // fetch:POST the post
-      await fetch(`http://localhost:8080/api/post`, {
+      await fetch(`/api/api/post`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

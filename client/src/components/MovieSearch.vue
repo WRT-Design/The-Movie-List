@@ -1,20 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const controller = new AbortController()
+const controller = new AbortController();
 // eslint-disable-next-line no-unused-vars
-const signal = controller.signal
+const signal = controller.signal;
 
-defineEmits(['select', 'deselect'])
-
+defineEmits(["select", "deselect"]);
 </script>
 
 <template>
   <div>
     <!-- Search Bar Section -->
-    <label for="movieSearch">Movie:
-      <input id="search" type="text" name="movieSearch" placeholder="Search for a movie" v-model="searchTerm"
-        @keyup="startSearch(controller)" v-if="!selected" />
+    <label for="movieSearch"
+      >Movie:
+      <input
+        id="search"
+        type="text"
+        name="movieSearch"
+        placeholder="Search for a movie"
+        v-model="searchTerm"
+        @keyup="startSearch(controller)"
+        v-if="!selected"
+      />
       <div v-if="selected" id="selection">
         <p>{{ searchTerm }}</p>
         <p id="deselect" @click="deselect">X</p>
@@ -23,7 +30,11 @@ defineEmits(['select', 'deselect'])
     <!-- results -->
     <div class="results">
       <ul>
-        <li v-for="movie in filteredResults" :key="movie.id" @click="select($event, movie.id)">
+        <li
+          v-for="movie in filteredResults"
+          :key="movie.id"
+          @click="select($event, movie.id)"
+        >
           <h3 class="movieTitle">{{ movie.title }} ({{ movie.year }})</h3>
         </li>
       </ul>
@@ -32,48 +43,40 @@ defineEmits(['select', 'deselect'])
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   data() {
     return {
       searchResults: [],
       filteredResults: [],
-      searchTerm: '',
+      searchTerm: "",
       selected: ref(false),
-      movieId: ''
-    }
+      movieId: "",
+    };
   },
   methods: {
     async startSearch(controller) {
       controller.abort(); // cancel any pending fetch request before calling another
-      await this.search()
+      await this.search();
     },
     async search() {
       if (this.searchTerm.length > 2) {
-
         const options = {
-          method: 'GET',
-          url: `https://moviesdatabase.p.rapidapi.com/titles/search/title/${this.searchTerm}`,
-          params: {
-            exact: 'false',
-            info: 'base_info',
-            titleType: 'movie',
-            limit: '20',
-          },
+          method: "GET",
           headers: {
-            'X-RapidAPI-Key': '6bee0ab6damshafb3993a5daf034p1d5334jsn3f5f2b13db0d',
-            'X-RapidAPI-Host': 'moviesdatabase.p.rapidapi.com'
-          }
+            "Content-Type": "application/json",
+          },
+          url: `/api/api/moviesAPI/search/${this.searchTerm}`,
         };
 
         try {
           const response = await axios.request(options);
-          this.searchResults = response.data.results
+          this.searchResults = response.data.results;
 
           for (let res of this.searchResults) {
             if (res.releaseYear == undefined) {
-              this.searchResults.splice(this.searchResults.indexOf(res), 1)
+              this.searchResults.splice(this.searchResults.indexOf(res), 1);
             }
           }
 
@@ -81,29 +84,29 @@ export default {
             id: movie.id,
             title: movie.titleText.text,
             year: movie.releaseYear.year,
-          }))
-
-
+          }));
         } catch (error) {
           console.error(error);
         }
       }
     },
     select(e, movieId) {
-      this.movieId = movieId
-      this.searchTerm = this.filteredResults.filter((movie) => movie.id == movieId)[0].title
-      this.filteredResults = []
-      this.selected = true
-      this.$emit('select', this.movieId)
+      this.movieId = movieId;
+      this.searchTerm = this.filteredResults.filter(
+        (movie) => movie.id == movieId
+      )[0].title;
+      this.filteredResults = [];
+      this.selected = true;
+      this.$emit("select", this.movieId);
     },
     deselect() {
-      this.searchTerm = ''
-      this.filteredResults = []
-      this.selected = false
-      this.$emit('deselect')
-    }
-  }
-}
+      this.searchTerm = "";
+      this.filteredResults = [];
+      this.selected = false;
+      this.$emit("deselect");
+    },
+  },
+};
 </script>
 
 <style>

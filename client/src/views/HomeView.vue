@@ -1,6 +1,6 @@
 <script setup>
-import NavC from '../components/NavC.vue'
-import { ref } from 'vue'
+import NavC from "../components/NavC.vue";
+import { ref } from "vue";
 </script>
 
 <template>
@@ -31,41 +31,41 @@ export default {
   data() {
     return {
       auth: ref(this.$auth0.isAuthenticated),
-      user: ref(this.$auth0.user)
-    }
+      user: ref(this.$auth0.user),
+    };
   },
   async beforeMount() {
     // use this to check if a user is already logged in
     if (this.auth) {
-      const userExists = await fetch(`http://localhost:8080/api/user/${this.user.nickname}`, {
-        method: 'GET',
+      const userExists = await fetch(`/api/api/user/${this.user.nickname}`, {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
       if (userExists.status != 200) {
-        await fetch(`http://localhost:8080/api/user`, {
-          method: 'POST',
+        await fetch(`api/api/user`, {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             user: {
               username: this.user.nickname,
               first_name: this.user.name,
               email: this.user.email,
-            }
-          })
-        })
+            },
+          }),
+        });
       }
     }
   },
   methods: {
     authCheck() {
-      console.log('user: ', this.user)
+      console.log("user: ", this.user);
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

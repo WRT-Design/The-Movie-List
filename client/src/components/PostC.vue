@@ -44,7 +44,7 @@ export default {
       e.target.parentElement.remove();
 
       // do a fetch to remove from the DB
-      fetch(`http://localhost:8080/api/post/${postId}`, {
+      fetch(`/api/api/post/${postId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

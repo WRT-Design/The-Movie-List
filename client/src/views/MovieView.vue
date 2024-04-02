@@ -46,16 +46,18 @@ export default {
   async beforeMount() {
     try {
       const response = await fetch(
-        `https://moviesdatabase.p.rapidapi.com/titles/${this.$route.params.movieId}`,
+        `/api/api/moviesAPI/title/${this.$route.params.movieId}`,
         {
           method: "GET",
           headers: {
-            "X-RapidAPI-Key": process.env.VUE_APP_RAPID_API_KEY,
-            "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com",
+            "Content-Type": "application/json",
           },
         }
-      ).then((res) => res.json());
-      this.movie = response.results;
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          this.movie = data.results;
+        });
       console.log(this.movie);
     } catch (error) {
       console.log(error);

@@ -43,6 +43,7 @@ require("./routes/star.routes.js")(app);
 require("./routes/settings.routes.js")(app);
 require("./routes/follows.routes.js")(app);
 require("./routes/reply.routes.js")(app);
+require("./routes/moviesAPI.routes.js")(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

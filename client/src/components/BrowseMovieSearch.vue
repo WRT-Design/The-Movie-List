@@ -125,18 +125,10 @@ export default {
       if (this.searchTerm.length > 2) {
         const options = {
           method: "GET",
-          url: `https://moviesdatabase.p.rapidapi.com/titles/search/title/${this.searchTerm}`,
-          params: {
-            exact: "false",
-            info: "base_info",
-            titleType: "movie",
-            limit: "20",
-          },
           headers: {
-            "X-RapidAPI-Key":
-              "6bee0ab6damshafb3993a5daf034p1d5334jsn3f5f2b13db0d",
-            "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com",
+            "Content-Type": "application/json",
           },
+          url: `/api/api/moviesAPI/search/${this.searchTerm}`,
         };
 
         try {

@@ -57,7 +57,7 @@ export default {
       console.log("ratingId: ", ratingId);
 
       // do a fetch to remove from the DB
-      fetch(`http://localhost:8080/api/rating/${ratingId}?movieId=${movieId}`, {
+      fetch(`/api/api/rating/${ratingId}?movieId=${movieId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

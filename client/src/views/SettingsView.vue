@@ -33,7 +33,7 @@ export default {
   methods: {
     deleteAccount() {
       const username = document.querySelector("#deleteAccount").value;
-      fetch(`http://localhost:3000/api/user/${username}`, {
+      fetch(`/api/api/user/${username}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
