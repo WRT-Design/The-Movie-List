@@ -27,7 +27,12 @@ function closeModal(type) {
   <div class="browse">
     <h1>Browse</h1>
     <section>
-      <BrowseMovieSearch />
+      <BrowseMovieSearch
+        @newRating="
+          newRating($event);
+          openModal('sr');
+        "
+      />
       <button
         type="button"
         class="orange newRating link"
@@ -57,7 +62,10 @@ function closeModal(type) {
             @click="closeModal('sr')"
           ></button>
         </div>
-        <div class="modal-body">rating content here</div>
+        <div v-if="movie" class="modal-body">
+          Rating for {{ movie.titleText.text }}
+          <!-- fill out the rest of the modal information needed -->
+        </div>
         <div class="modal-footer">
           <button
             type="button"
@@ -78,5 +86,38 @@ function closeModal(type) {
     </div>
   </div>
 </template>
+
+<script>
+import { Modal } from "bootstrap";
+import { ref, reactive, onMounted } from "vue";
+
+export default {
+  data() {
+    return {
+      movie: ref(""),
+      // state: reactive({ specific_modal_rating: null }),
+    };
+  },
+  methods: {
+    newRating(movie) {
+      this.movie = movie;
+      console.log("emit: new rating || movie: ", movie);
+      // this.openModal("sr");
+    },
+    // onMounted() {
+    //   this.state.specific_modal_rating = new Modal(
+    //     "#specific_modal_rating",
+    //     {}
+    //   );
+    // },
+    // openModal(type) {
+    //   if (type == "sr") this.state.specific_modal_rating.show();
+    // },
+    // closeModal(type) {
+    //   if (type == "sr") this.state.specific_modal_rating.hide();
+    // },
+  },
+};
+</script>
 
 <style></style>

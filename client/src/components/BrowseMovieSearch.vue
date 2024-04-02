@@ -170,7 +170,7 @@ export default {
     newRating(e, movieId) {
       for (let movie of this.searchResults) {
         if (movie.id == movieId) {
-          console.log(movie.titleText.text);
+          this.$emit("newRating", movie);
         }
       }
     },
