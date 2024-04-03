@@ -242,8 +242,6 @@ function closeModal(type) {
             </div>
           </div>
 
-          <div>Helo</div>
-
           <div id="psLabel"></div>
 
           <h3>Your Review</h3>
