@@ -29,10 +29,23 @@ function closeModal(type) {
   <div class="profile">
     <div>
       <section class="profile-info">
-        <img :src="user.picture" alt="avatar" width="200px" height="200px" />
+        <img
+          v-if="dbUser.picture"
+          :src="dbUser.picture"
+          alt="avatar"
+          width="200px"
+          height="200px"
+        />
+        <img
+          v-else
+          src="@/assets/annon_avatar.jpg"
+          alt="avatar"
+          width="200px"
+          height="200px"
+        />
         <section>
-          <h2>{{ user.name }}</h2>
-          <h4>@{{ user.nickname }}</h4>
+          <h2>{{ dbUser.first_name }}</h2>
+          <h4>@{{ dbUser.username }}</h4>
           <p>Bio: {{ bio }}</p>
         </section>
       </section>
@@ -178,7 +191,7 @@ function closeModal(type) {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modal_demo_label">New Post</h5>
+          <h5 class="modal-title" id="modal_demo_label">Edit Profile</h5>
           <button
             type="button"
             class="btn-close"
@@ -186,10 +199,17 @@ function closeModal(type) {
             @click="closeModal('ep')"
           ></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body d-flex flex-column">
+          <label class="m-2"
+            >Upload Profile Picture:
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              @change="checkFileSize"
+          /></label>
           <textarea
             v-model="bio"
-            class="bio"
+            class="bio m-2"
             placeholder="Tell people a little about yourself."
           ></textarea>
         </div>
@@ -236,30 +256,26 @@ export default {
   },
   async beforeMount() {
     // use this to check if a user is already logged in
-    if (!this.auth) {
-      // user is not authenticated && redirect
-      this.$router.push("/");
-    } else {
-      const username = this.$auth0.user._rawValue.nickname;
+    console.log(this.$route.params.username);
 
-      let user;
-      await fetch(`/api/api/user/${username}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          user = result.user;
-        });
+    let user;
+    await fetch(`/api/api/user/${this.$route.params.username}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        user = result.user;
+        console.log(user);
+      });
 
-      this.dbUser = user;
-      this.bio = user.bio;
+    this.dbUser = user;
+    this.bio = user.bio;
 
-      this.getRatings(user.id);
-      this.getPosts(user.id);
-    }
+    this.getRatings(user.id);
+    this.getPosts(user.id);
   },
   methods: {
     authCheck() {
@@ -350,6 +366,27 @@ export default {
     },
     dateFormat(date) {
       return date;
+    },
+    checkFileSize(event) {
+      const input = event.srcElement;
+      if (input.files && input.files[0]) {
+        var fSize = input.files[0].size;
+        var mSize = 16 * 1024 * 1024;
+
+        if (fSize > mSize) {
+          alert(
+            "File size exceeds the maximum limit (16MB). Please choose a smaller file."
+          );
+          // Clear the file input to allow the user to choose a different file
+          input.value = "";
+        } else {
+          console.log(
+            "File size is good at ",
+            (fSize / 1048576).toFixed(1),
+            " MB"
+          );
+        }
+      }
     },
   },
 };

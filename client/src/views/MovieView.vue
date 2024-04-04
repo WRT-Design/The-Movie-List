@@ -1,5 +1,7 @@
 <script setup>
 import NavC from "../components/NavC.vue";
+import MLTable from "../components/MovieListTable.vue";
+
 import { ref } from "vue";
 </script>
 
@@ -83,7 +85,14 @@ import { ref } from "vue";
               </section>
             </div>
           </div>
-          <div class="row">ratings table here</div>
+          <div class="row">
+            <div class="col-md-12 d-flex p-2">
+              <h4>Average Scores</h4>
+            </div>
+          </div>
+          <div class="col-md-12 d-flex p-2">
+            <div class="row"><MLTable /></div>
+          </div>
         </div>
       </section>
     </div>
@@ -95,6 +104,8 @@ export default {
   data() {
     return {
       movie: ref(""),
+      dbMovie: ref(""),
+      ratings: {},
     };
   },
   methods: {
@@ -126,23 +137,42 @@ export default {
           return "December";
       }
     },
+    parseRatings(m) {
+      for (let key in this.dbMovie) {
+        if (key.toString().startsWith("avg_")) {
+          this.ratings[key] = m[key];
+        }
+      }
+      console.log(this.ratings);
+    },
   },
   async beforeMount() {
     try {
-      const response = await fetch(
-        `/api/api/moviesAPI/title/${this.$route.params.movieId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      await fetch(`/api/api/moviesAPI/title/${this.$route.params.movieId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           this.movie = data.results;
         });
       console.log(this.movie);
+
+      await fetch(`/api/api/movie/${this.$route.params.movieId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          this.dbMovie = data.movie;
+        });
+
+      console.log(this.dbMovie);
+      this.parseRatings(this.dbMovie);
     } catch (error) {
       console.log(error);
     }

@@ -44,7 +44,10 @@ function closeModal(type) {
       <RouterLink class="orange" to="/">Home</RouterLink>
       <RouterLink
         class="orange"
-        :to="`/profile/${$auth0.user._rawValue.nickname}`"
+        :to="{
+          name: 'profile',
+          params: { username: $auth0.user._rawValue.nickname },
+        }"
         >Profile</RouterLink
       >
       <RouterLink class="orange" to="/browse">Browse</RouterLink>

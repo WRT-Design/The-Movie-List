@@ -141,12 +141,8 @@ export default {
           this.searchResults.map((m) => {
             if (m.plot && m.plot.plotText) {
               m.plot = m.plot.plotText.plainText;
-              console.log(m);
-              console.log(m.plot);
             }
           });
-
-          console.log(this.searchResults);
         } catch (error) {
           console.error(error);
         }
