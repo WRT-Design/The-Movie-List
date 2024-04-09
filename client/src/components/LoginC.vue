@@ -7,14 +7,19 @@ import { useAuth0 } from '@auth0/auth0-vue';
 
 export default {
   setup() {
-    const { loginWithRedirect } = useAuth0();
+
+    const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
     return {
       login: () => {
         console.log('login')
-        loginWithRedirect();
+        loginWithRedirect()
       },
+      user,
+      isAuthenticated,
     };
+
+    // $emit('login', user, isAuthenticated);
   },
 }
 </script>

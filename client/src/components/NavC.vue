@@ -31,33 +31,18 @@ function closeModal(type) {
 
 <template>
   <div class="navWrapper">
-    <RouterLink to="/"
-      ><img
-        alt="Vue logo"
-        class="logo"
-        src="@/assets/TML_white_1.svg"
-        width="125"
-        height="125"
-      />
+    <RouterLink to="/"><img alt="Vue logo" class="logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
     </RouterLink>
     <nav v-if="auth">
       <RouterLink class="orange" to="/">Home</RouterLink>
-      <RouterLink
-        class="orange"
-        :to="{
-          name: 'profile',
-          params: { username: $auth0.user._rawValue.nickname },
-        }"
-        >Profile</RouterLink
-      >
+      <RouterLink class="orange" :to="{
+      name: 'profile',
+      params: { username: username },
+    }">Profile</RouterLink>
       <RouterLink class="orange" to="/browse">Browse</RouterLink>
       <RouterLink class="orange" to="/settings">Settings</RouterLink>
 
-      <button
-        type="button"
-        class="orange newRating link"
-        @click="openModal('r')"
-      >
+      <button type="button" class="orange newRating link" @click="openModal('r')">
         New Rating
       </button>
 
@@ -73,7 +58,7 @@ function closeModal(type) {
 
     <footer>
       <section class="logInOut">
-        <LoginC v-if="!auth" />
+        <LoginC v-if="!auth" @login="login($event)" />
         <LogoutC v-if="auth" />
       </section>
       &copy; 2024 William Thackeray
@@ -81,26 +66,15 @@ function closeModal(type) {
   </div>
 
   <!-- Rating Modal -->
-  <div
-    class="modal fade"
-    id="modal_rating"
-    tabindex="-1"
-    aria-labelledby="modal_demo_label"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="modal_rating" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal_demo_label">New Rating</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="
-              closeModal('r');
-              cancelRating();
-            "
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="
+      closeModal('r');
+    cancelRating();
+    "></button>
         </div>
         <div class="modal-body">
           <h3>Movie</h3>
@@ -110,137 +84,54 @@ function closeModal(type) {
             <div>
               <div>
                 <label for="acting">Acting</label>
-                <input
-                  id="acting"
-                  name="acting"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.acting"
-                />
+                <input id="acting" name="acting" type="number" max="5" min="0" step=".1" v-model="ratings.acting" />
               </div>
               <div>
                 <label for="attraction">Attraction</label>
-                <input
-                  id="attraction"
-                  name="attraction"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.attraction"
-                />
+                <input id="attraction" name="attraction" type="number" max="5" min="0" step=".1"
+                  v-model="ratings.attraction" />
               </div>
               <div>
                 <label for="cinemetography">Cinemetography</label>
-                <input
-                  id="cinemetography"
-                  name="cinemetography"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.cinemetography"
-                />
+                <input id="cinemetography" name="cinemetography" type="number" max="5" min="0" step=".1"
+                  v-model="ratings.cinemetography" />
               </div>
               <div>
-                <label for="dialogue">Dialogue</label
-                ><input
-                  id="dialogue"
-                  name="dialogue"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.dialogue"
-                />
+                <label for="dialogue">Dialogue</label><input id="dialogue" name="dialogue" type="number" max="5" min="0"
+                  step=".1" v-model="ratings.dialogue" />
               </div>
               <div>
-                <label for="directing">Directing</label
-                ><input
-                  id="directing"
-                  name="directing"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.directing"
-                />
+                <label for="directing">Directing</label><input id="directing" name="directing" type="number" max="5"
+                  min="0" step=".1" v-model="ratings.directing" />
               </div>
               <div id="psLabel">
                 <label for="personalScore">Personal Score</label>
-                <input
-                  id="personalScore"
-                  name="personalScore"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="personalScore"
-                />
+                <input id="personalScore" name="personalScore" type="number" max="5" min="0" step=".1"
+                  v-model="personalScore" />
               </div>
             </div>
             <div>
               <div>
                 <label for="editing">Editing</label>
-                <input
-                  id="editing"
-                  name="editing"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.editing"
-                />
+                <input id="editing" name="editing" type="number" max="5" min="0" step=".1" v-model="ratings.editing" />
               </div>
               <div>
                 <label for="plot">Plot</label>
-                <input
-                  id="plot"
-                  name="plot"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.plot"
-                />
+                <input id="plot" name="plot" type="number" max="5" min="0" step=".1" v-model="ratings.plot" />
               </div>
               <div>
                 <label for="soundtrack">Soundtrack</label>
-                <input
-                  id="soundtrack"
-                  name="soundtrack"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.soundtrack"
-                />
+                <input id="soundtrack" name="soundtrack" type="number" max="5" min="0" step=".1"
+                  v-model="ratings.soundtrack" />
               </div>
               <div>
                 <label for="specialEffects">Special Effects</label>
-                <input
-                  id="specialEffects"
-                  name="specialEffects"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.specialEffects"
-                />
+                <input id="specialEffects" name="specialEffects" type="number" max="5" min="0" step=".1"
+                  v-model="ratings.specialEffects" />
               </div>
               <div>
                 <label for="theme">Theme</label>
-                <input
-                  id="theme"
-                  name="theme"
-                  type="number"
-                  max="5"
-                  min="0"
-                  step=".1"
-                  v-model="ratings.theme"
-                />
+                <input id="theme" name="theme" type="number" max="5" min="0" step=".1" v-model="ratings.theme" />
               </div>
             </div>
           </div>
@@ -248,33 +139,19 @@ function closeModal(type) {
           <div id="psLabel"></div>
 
           <h3>Your Review</h3>
-          <textarea
-            class="review"
-            v-model="review"
-            placeholder="Write your review..."
-          ></textarea>
+          <textarea class="review" v-model="review" placeholder="Write your review..."></textarea>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="
-              closeModal('r');
-              cancelRating();
-            "
-          >
+          <button type="button" class="btn btn-secondary" @click="
+      closeModal('r');
+    cancelRating();
+    ">
             Cancel
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="post-btn"
-            @click="
-              closeModal('r');
-              postRating();
-            "
-            disabled
-          >
+          <button type="button" class="btn btn-primary" id="post-btn" @click="
+      closeModal('r');
+    postRating();
+    " disabled>
             Post
           </button>
         </div>
@@ -283,50 +160,27 @@ function closeModal(type) {
   </div>
 
   <!-- Post Modal -->
-  <div
-    class="modal fade"
-    id="modal_post"
-    tabindex="-1"
-    aria-labelledby="modal_demo_label"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="modal_post" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal_demo_label">New Post</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="closeModal('p')"
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="closeModal('p')"></button>
         </div>
         <div class="modal-body">
-          <textarea
-            v-model="postContent"
-            class="postContent"
-            placeholder="What's on your mind..."
-          ></textarea>
+          <textarea v-model="postContent" class="postContent" placeholder="What's on your mind..."></textarea>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="
-              closeModal('p');
-              cancelPost();
-            "
-          >
+          <button type="button" class="btn btn-secondary" @click="
+      closeModal('p');
+    cancelPost();
+    ">
             Cancel
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="
-              closeModal('p');
-              postPost();
-            "
-          >
+          <button type="button" class="btn btn-primary" @click="
+      closeModal('p');
+    postPost();
+    ">
             Post
           </button>
         </div>
@@ -340,6 +194,7 @@ export default {
   data() {
     return {
       auth: ref(this.$auth0.isAuthenticated),
+      username: ref(this.$auth0.user._rawValue.nickname),
       postContent: ref(""),
       ratings: {
         acting: ref(0),
@@ -488,7 +343,15 @@ export default {
       console.log("deselect");
       document.querySelector("#post-btn").disabled = true;
     },
+    login(e) {
+      console.log('login')
+      console.log(e)
+    }
   },
+  beforeMount() {
+    console.log('on mount')
+    console.log(this.$auth0.user._rawValue.nickname)
+  }
 };
 </script>
 
@@ -511,11 +374,11 @@ nav {
   align-items: center;
 }
 
-nav > * {
+nav>* {
   padding: 0.5rem 1rem;
 }
 
-nav > *:hover {
+nav>*:hover {
   background-color: #f5901542;
 }
 
