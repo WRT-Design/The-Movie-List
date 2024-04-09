@@ -1,26 +1,21 @@
 <script setup>
+import MovieTable from "../components/MovieTable.vue";
 import NavC from "../components/NavC.vue";
+
+
 import { ref } from "vue";
 </script>
 
 <template>
   <main>
-    <NavC />
+    <NavC :user="user || {}" />
     <div class="main">
       <section class="homeHeader">
         <h1>The Movie List</h1>
         <h2 v-if="auth">Welcome back {{ user.name }}</h2>
       </section>
-      <section class="theMovieList">
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Average</th>
-              <th>Tags</th>
-            </tr>
-          </thead>
-        </table>
+      <section class="">
+        <MovieTable :tableType="type" />
       </section>
     </div>
   </main>
@@ -32,10 +27,13 @@ export default {
     return {
       auth: ref(this.$auth0.isAuthenticated),
       user: ref(this.$auth0.user),
+      type: ref('movie')
     };
   },
   async beforeMount() {
     // use this to check if a user is already logged in
+    console.log('before mount')
+    console.log('this.auth: ', this.$auth0.isAuthenticated)
     if (this.auth) {
       const userExists = await fetch(`/api/api/user/${this.user.nickname}`, {
         method: "GET",
@@ -73,7 +71,8 @@ export default {
   text-align: center;
 }
 
-.theMovieList table {
+
+/* .theMovieList table {
   width: 100%;
   border-collapse: collapse;
   border: 1px solid #ddd;
@@ -87,7 +86,7 @@ export default {
 .theMovieList td {
   border: 1px solid #ddd;
   padding: 10px;
-}
+} */
 
 .navWrapper {
   border: solid 3px var(--tml-orange);

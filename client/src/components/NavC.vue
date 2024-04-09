@@ -191,10 +191,11 @@ function closeModal(type) {
 
 <script>
 export default {
+  props: ['user'],
   data() {
     return {
       auth: ref(this.$auth0.isAuthenticated),
-      username: ref(this.$auth0.user._rawValue.nickname),
+      username: ref(this.$props.user),
       postContent: ref(""),
       ratings: {
         acting: ref(0),
@@ -348,9 +349,13 @@ export default {
       console.log(e)
     }
   },
-  beforeMount() {
-    console.log('on mount')
-    console.log(this.$auth0.user._rawValue.nickname)
+  async beforeMount() {
+    console.log('before mount')
+    console.log(await this.$props.user)
+  },
+  mounted() {
+    console.log('mounted')
+    console.log(this.username)
   }
 };
 </script>
