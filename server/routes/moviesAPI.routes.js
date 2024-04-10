@@ -37,6 +37,7 @@ module.exports = (app) => {
       .then((res) => res.json())
       .then((result) => {
         res.json(result); //sends the result
+        console.log(result);
       });
   });
 

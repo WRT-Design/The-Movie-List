@@ -72,7 +72,8 @@ function closeModal(type) {
   </div>
 
   <!-- Rating Modal -->
-  <div class="modal fade" id="modal_rating" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
+  <div class="modal fade text-light" id="modal_rating" tabindex="-1" aria-labelledby="modal_demo_label"
+    data-bs-theme="dark" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -166,7 +167,8 @@ function closeModal(type) {
   </div>
 
   <!-- Post Modal -->
-  <div class="modal fade" id="modal_post" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
+  <div class="modal fade text-light" id="modal_post" tabindex="-1" aria-labelledby="modal_demo_label"
+    data-bs-theme="dark" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

@@ -13,32 +13,18 @@ import { ref } from "vue";
         <div class="container">
           <div class="row">
             <div class="col-md-12 d-flex p-2">
-              <img
-                v-if="movie.primaryImage"
-                :src="movie.primaryImage.url"
-                :alt="movie.primaryImage.caption.plainText"
-                width="25%"
-                height="auto"
-              />
-              <img
-                v-else
-                src="@/assets/no-poster.png"
-                width="25%"
-                height="auto"
-                class="p-2"
-              />
+              <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
+                width="25%" height="auto" />
+              <img v-else src="@/assets/no-poster.png" width="25%" height="auto" class="p-2" />
               <section class="px-2">
                 <h2>{{ movie.titleText.text }} | 3.7 stars</h2>
                 <section>
                   <b>Release Date: </b>
-                  <span
-                    v-if="
-                      movie.releaseDate &&
-                      movie.releaseDate.month &&
-                      movie.releaseDate.day &&
-                      movie.releaseDate.year
-                    "
-                  >
+                  <span v-if="movie.releaseDate &&
+                movie.releaseDate.month &&
+                movie.releaseDate.day &&
+                movie.releaseDate.year
+                ">
                     {{ getMonth(movie.releaseDate.month) }}
                     {{ movie.releaseDate.day }},
                     {{ movie.releaseDate.year }}
@@ -47,8 +33,7 @@ import { ref } from "vue";
                 </section>
                 <section>
                   <b>Genres: </b>
-                  <span v-if="movie.genres" v-for="m of movie.genres.genres"
-                    >{{ m.text }},
+                  <span v-if="movie.genres" v-for="m of movie.genres.genres">{{ m.text }},
                   </span>
                   <span v-else>None</span>
                 </section>
@@ -72,14 +57,10 @@ import { ref } from "vue";
                 </section>
                 <section>
                   <b>Plot: </b>
-                  <span
-                    v-if="
-                      movie.plot &&
-                      movie.plot.plotText &&
-                      movie.plot.plotText.plainText
-                    "
-                    >{{ movie.plot.plotText.plainText }}</span
-                  >
+                  <span v-if="movie.plot &&
+                movie.plot.plotText &&
+                movie.plot.plotText.plainText
+                ">{{ movie.plot.plotText.plainText }}</span>
                   <span v-else>None</span>
                 </section>
               </section>
@@ -91,7 +72,9 @@ import { ref } from "vue";
             </div>
           </div>
           <div class="col-md-12 d-flex p-2">
-            <div class="row"><MLTable /></div>
+            <div class="row">
+              <MLTable />
+            </div>
           </div>
         </div>
       </section>

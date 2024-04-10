@@ -12,17 +12,9 @@ defineEmits(["newRating"]);
 <template>
   <div>
     <!-- Search Bar Section -->
-    <label for="movieSearch"
-      >Movie:
-      <input
-        id="search"
-        type="text"
-        name="movieSearch"
-        placeholder="Search for a movie"
-        v-model="searchTerm"
-        @keyup="startSearch(controller)"
-        v-if="!selected"
-      />
+    <label for="movieSearch">Movie:
+      <input id="search" type="text" name="movieSearch" placeholder="Search for a movie" v-model="searchTerm"
+        @keyup="startSearch(controller)" v-if="!selected" />
       <div v-if="selected" id="selection">
         <p>{{ searchTerm }}</p>
         <p id="deselect" @click="deselect">X</p>
@@ -32,28 +24,13 @@ defineEmits(["newRating"]);
     <div class="results">
       <ul>
         <li v-for="movie in searchResults" :key="movie.id" class="d-flex pt-2">
-          <img
-            v-if="movie.primaryImage"
-            :src="movie.primaryImage.url"
-            :alt="movie.primaryImage.caption.plainText"
-            width="25%"
-            height="25%"
-            class="p-2"
-          />
-          <img
-            v-else
-            src="@/assets/no-poster.png"
-            width="25%"
-            height="25%"
-            class="p-2"
-          />
+          <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
+            width="25%" height="25%" class="p-2" />
+          <img v-else src="@/assets/no-poster.png" width="25%" height="25%" class="p-2" />
           <div class="p-2">
             <h3 class="movieTitle">
-              <RouterLink
-                class="orange"
-                :to="{ name: 'movie', params: { movieId: movie.id } }"
-                >{{ movie.titleText.text }}</RouterLink
-              >
+              <RouterLink class="orange" :to="{ name: 'movie', params: { movieId: movie.id } }">{{ movie.titleText.text
+                }}</RouterLink>
             </h3>
 
             <h4 v-if="movie.releaseDate">
@@ -61,38 +38,35 @@ defineEmits(["newRating"]);
               {{ movie.releaseDate.day }},
               {{ movie.releaseDate.year }}
             </h4>
-            <h4>Directors: Writers:</h4>
+            <h4>Directors: <span v-if="movie.directors && movie.directors[0]" v-for="d of movie.directors">
+                <span v-for="d of d.credits">
+                  {{ d.name.nameText.text }}
+                </span>
+              </span>
+              <span v-else>None</span>
+            </h4>
+            <h4>
+              Writers: <span v-if="movie.writers && movie.writers[0]" v-for="w of movie.writers">
+                <span v-for="w of w.credits">
+                  {{ w.name.nameText.text }}
+                </span>
+              </span>
+              <span v-else>None</span>
+            </h4>
             <p>
               Plot:
               <span v-if="movie.plot && !movie.plot.plotText">
-                {{ movie.plot }}</span
-              >
+                {{ movie.plot }}</span>
               <span v-else>No Plot Available</span>
             </p>
             <section>
-              <button
-                type="button"
-                class="btn primary bg-secondary text-bg-dark m-2"
-                @mouseenter="rateHover = true"
-                @mouseleave="rateHover = false"
-                @click="newRating($event, movie.id)"
-              >
+              <button type="button" class="btn primary bg-secondary text-bg-dark m-2" @mouseenter="rateHover = true"
+                @mouseleave="rateHover = false" @click="newRating($event, movie.id)">
                 <FontAwesomeIcon icon="fa-regular fa-star" color="white" />
                 <Transition>
                   <span v-if="rateHover" class="p-1">Rate</span>
                 </Transition>
               </button>
-              <!-- <button
-                type="button"
-                class="btn primary bg-secondary text-bg-dark m-2"
-                @mouseenter="likeHover = true"
-                @mouseleave="likeHover = false"
-              >
-                <FontAwesomeIcon icon="fa-regular fa-heart" color="white" />
-                <Transition>
-                  <span v-if="likeHover">Like</span>
-                </Transition>
-              </button> -->
             </section>
           </div>
         </li>
