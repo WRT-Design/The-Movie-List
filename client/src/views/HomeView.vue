@@ -15,7 +15,7 @@ import { ref } from "vue";
         <h2 v-if="auth">Welcome back {{ user.name }}</h2>
       </section>
       <section class="">
-        <MovieTable :tableType="type" />
+        <MovieTable table-type="movie" />
       </section>
     </div>
   </main>
@@ -27,7 +27,6 @@ export default {
     return {
       auth: ref(this.$auth0.isAuthenticated),
       user: ref(this.$auth0.user),
-      type: ref('movie')
     };
   },
   async beforeMount() {

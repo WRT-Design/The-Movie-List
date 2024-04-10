@@ -36,6 +36,18 @@ Movie.findBy = async (paramName, paramVal) => {
   }
 };
 
+Movie.findAll = async () => {
+  try {
+    const result = await prisma.movie.findMany();
+    return result;
+  } catch (err) {
+    console.error(err);
+    await prisma.$disconnect();
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
 Movie.update = async (movieId, fields) => {
   try {
     await prisma.movie.update({

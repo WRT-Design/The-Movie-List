@@ -37,6 +37,15 @@ exports.findOne = async (req, res) => {
   }
 };
 
+exports.findAll = async (req, res) => {
+  const movies = await Movie.findAll();
+  if (!movies) {
+    res.status(500).send({
+      message: "Some error occurred while retrieving movies.",
+    });
+  } else res.status(200).send(movies);
+};
+
 exports.update = async (req, res) => {
   //update a movie
   const movieId = req.params.movieId;

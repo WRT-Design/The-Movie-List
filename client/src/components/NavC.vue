@@ -7,6 +7,12 @@ import { Modal } from "bootstrap";
 import { ref, reactive, onMounted } from "vue";
 
 defineEmits(["post", "rating"]);
+defineProps({
+  user: {
+    type: Object,
+    required: true,
+  },
+})
 
 const state = reactive({
   modal_rating: null,
@@ -195,7 +201,7 @@ export default {
   data() {
     return {
       auth: ref(this.$auth0.isAuthenticated),
-      username: ref(this.$props.user),
+      username: ref('thack.whack'),
       postContent: ref(""),
       ratings: {
         acting: ref(0),
@@ -355,8 +361,10 @@ export default {
   },
   mounted() {
     console.log('mounted')
-    console.log(this.username)
-  }
+    console.log(this.$auth0.user._rawValue.nickname)
+    // username = this.auth0.user._rawValue.nickname
+  },
+
 };
 </script>
 

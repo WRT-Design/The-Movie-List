@@ -10,7 +10,7 @@ module.exports = (app) => {
   app.get("/api/movie/:movieId", movie.findOne);
 
   // // get all movies
-  // app.get("/api/movie", movie.findAll);
+  app.get("/api/movie", movie.findAll);
 
   // put a change for a movie
   app.put("/api/movie/:movieId", movie.update);
