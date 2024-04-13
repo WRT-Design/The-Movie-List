@@ -36,30 +36,35 @@ function closeModal(type) {
 </script>
 
 <template>
-  <div class="navWrapper">
-    <RouterLink to="/"><img alt="Vue logo" class="logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
+  <div class="navWrapper text-light d-flex flex-column" data-bs-theme="dark">
+    <RouterLink to="/" class="navbar-brand">
+      <img alt="The Movie List logo" class="logo text-center" src="@/assets/TML_white_1.svg" width="125" height="125" />
     </RouterLink>
-    <nav v-if="auth">
-      <RouterLink class="orange" to="/">Home</RouterLink>
-      <RouterLink class="orange" :to="{
-      name: 'profile',
-      params: { username: username },
-    }">Profile</RouterLink>
-      <RouterLink class="orange" to="/browse">Browse</RouterLink>
-      <RouterLink class="orange" to="/settings">Settings</RouterLink>
+    <nav class="navbar navbar-expand-md">
+      <div class="container-fluid d-flex justify-content-center">
+        <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav d-flex flex-column">
+            <RouterLink class="nav-link text-center" to="/">Home</RouterLink>
+            <RouterLink v-if="auth" class="nav-link text-center" :to="{
+              name: 'profile',
+              params: { username: username },
+            }">Profile</RouterLink>
+            <RouterLink class="nav-link text-center" to="/browse">Browse</RouterLink>
+            <RouterLink v-if="auth" class="nav-link text-center" to="/settings">Settings</RouterLink>
+            <button v-if="auth" type="button" class="nav-link newRating link" @click="openModal('r')">
+              New Rating
+            </button>
 
-      <button type="button" class="orange newRating link" @click="openModal('r')">
-        New Rating
-      </button>
-
-      <button type="button" class="orange newPost link" @click="openModal('p')">
-        New Post
-      </button>
-    </nav>
-
-    <nav v-if="!auth">
-      <RouterLink class="orange" to="/">Home</RouterLink>
-      <RouterLink class="orange" to="/browse">Browse</RouterLink>
+            <button v-if="auth" type="button" class="nav-link newPost link" @click="openModal('p')">
+              New Post
+            </button>
+          </div>
+        </div>
+      </div>
     </nav>
 
     <footer>
@@ -79,9 +84,9 @@ function closeModal(type) {
         <div class="modal-header">
           <h5 class="modal-title" id="modal_demo_label">New Rating</h5>
           <button type="button" class="btn-close" aria-label="Close" @click="
-      closeModal('r');
-    cancelRating();
-    "></button>
+              closeModal('r');
+            cancelRating();
+            "></button>
         </div>
         <div class="modal-body">
           <h3>Movie</h3>
@@ -150,15 +155,15 @@ function closeModal(type) {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="
-      closeModal('r');
-    cancelRating();
-    ">
+              closeModal('r');
+            cancelRating();
+            ">
             Cancel
           </button>
           <button type="button" class="btn btn-primary" id="post-btn" @click="
-      closeModal('r');
-    postRating();
-    " disabled>
+              closeModal('r');
+            postRating();
+            " disabled>
             Post
           </button>
         </div>
@@ -180,15 +185,15 @@ function closeModal(type) {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="
-      closeModal('p');
-    cancelPost();
-    ">
+              closeModal('p');
+            cancelPost();
+            ">
             Cancel
           </button>
           <button type="button" class="btn btn-primary" @click="
-      closeModal('p');
-    postPost();
-    ">
+              closeModal('p');
+            postPost();
+            ">
             Post
           </button>
         </div>
@@ -361,11 +366,6 @@ export default {
     console.log('before mount')
     console.log(await this.$props.user)
   },
-  mounted() {
-    console.log('mounted')
-    console.log(this.$auth0.user._rawValue.nickname)
-    // username = this.auth0.user._rawValue.nickname
-  },
 
 };
 </script>
@@ -382,20 +382,20 @@ export default {
   background-color: var(--tml-black);
 }
 
-.navWrapper,
+/* .navWrapper,
 nav {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
-nav>* {
+/* nav>* {
   padding: 0.5rem 1rem;
-}
+} */
 
-nav>*:hover {
+/* nav>*:hover {
   background-color: #f5901542;
-}
+} */
 
 .link {
   background-color: rgba(0, 0, 0, 0);
@@ -405,6 +405,7 @@ nav>*:hover {
 .router-link-active {
   font-family: "Caveat";
   font-size: 2rem;
+  color: var(--tml-orange);
 }
 
 .newRating {

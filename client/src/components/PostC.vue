@@ -5,22 +5,18 @@ defineProps(["content", "postId", "picURL", "name", "username", "date"]);
 </script>
 
 <template>
-  <li>
-    <section class="postHeader">
-      <img
-        src="https://lh3.googleusercontent.com/a/ACg8ocIFJTkb-LmMUiS3V9Cg3fZL9jkJ8SO2BEqDF30W0Zgetic=s96-c"
-        alt="avatar"
-        width="40px"
-        height="40px"
-      />
+  <li :id="postId" class="card" data-bs-theme="dark">
+    <section class="card-header d-flex align-items-center">
+      <img v-if="picURL" :src="picURL" alt="avatar" width="40px" height="40px" />
+      <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="40px" height="40px" />
       <span id="name">{{ name }}</span>
       <span id="username">@{{ username }}</span>
-      <span id="date">{{ date }}</span>
+      <span id="date"><small>{{ date }}</small></span>
     </section>
-    <section class="postBody">
+    <section class="card-body">
       {{ content }}
     </section>
-    <section class="postFooter">
+    <section class="card-footer">
       <button type="button" id="delBtnPost" @click="deletePost($event, postId)">
         <FontAwesomeIcon icon="fa-regular fa-trash-can" />
       </button>
@@ -40,8 +36,11 @@ defineProps(["content", "postId", "picURL", "name", "username", "date"]);
 export default {
   methods: {
     deletePost(e, postId) {
+      // TODO: add a confirm delete before we actually delete the post.
+
       // remove from UI
-      e.target.parentElement.remove();
+      document.getElementById(postId).remove();
+
 
       // do a fetch to remove from the DB
       fetch(`/api/api/post/${postId}`, {

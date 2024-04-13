@@ -26,9 +26,9 @@ function closeModal(type) {
 <template>
   <NavC />
   <div class="browse">
-    <h1>Browse</h1>
+    <h1 class="text-center p-2">Explore</h1>
     <section>
-      <BrowseMovieSearch @newRating="
+      <BrowseMovieSearch class="m-3" @newRating="
         newRating($event);
       openModal('sr');
       " />
@@ -53,25 +53,27 @@ function closeModal(type) {
           </section>
           <section>
             <div v-if="simple" class="form-group">
-              <label for="rating">Rating: {{ movieStars }} Stars</label>
-              <span>
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 2" />
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 1.5" />
-                <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
+              <div class="d-flex justify-content-between">
+                <span for="rating">Rating: {{ movieStars }} Stars</span>
+                <span>
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 2" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 1.5" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
 
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 3" />
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 2.5" />
-                <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 3" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 2.5" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
 
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 4" />
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 3.5" />
-                <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 4" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 3.5" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
 
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 5" />
-                <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 4.5" />
-                <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-              </span>
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 5" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 4.5" />
+                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
+                </span>
+              </div>
               <input type="range" class="form-range" min="1.0" max="5.0" step="0.5" id="rating"
                 v-model="movieStars"></input>
             </div>
@@ -262,10 +264,11 @@ export default {
 <style>
 .active {
   font-weight: 700;
+  color: var(--tml-orange);
 }
 
 .ratingNav {
   cursor: pointer;
-
+  font-size: large;
 }
 </style>

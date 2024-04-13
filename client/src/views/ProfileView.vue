@@ -2,6 +2,8 @@
 import NavC from "../components/NavC.vue";
 import Post from "../components/PostC.vue";
 import Rating from "../components/RatingC.vue";
+import RatingTable from "../components/RatingTable.vue";
+import PostTable from "../components/PostTable.vue";
 
 import { Modal } from "bootstrap";
 import { reactive, onMounted } from "vue";
@@ -29,20 +31,8 @@ function closeModal(type) {
   <div class="profile">
     <div>
       <section class="profile-info">
-        <img
-          v-if="dbUser.picture"
-          :src="dbUser.picture"
-          alt="avatar"
-          width="200px"
-          height="200px"
-        />
-        <img
-          v-else
-          src="@/assets/annon_avatar.jpg"
-          alt="avatar"
-          width="200px"
-          height="200px"
-        />
+        <img v-if="dbUser.picture" :src="dbUser.picture" alt="avatar" width="200px" height="200px" />
+        <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="200px" height="200px" />
         <section>
           <h2>{{ dbUser.first_name }}</h2>
           <h4>@{{ dbUser.username }}</h4>
@@ -72,163 +62,38 @@ function closeModal(type) {
       </button>
     </div>
 
-    <div class="movie-list" v-if="sections.ml">
-      <table>
-        <thead>
-          <tr>
-            <th id="movie">
-              <span>Movie</span>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Average</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Plot</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Attraction</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Theme</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Acting</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Dialogue</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Cinemetography</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Editing</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Special Effects</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Soundtrack</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Directing</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Personal Score</span>
-              </div>
-            </th>
-            <th>
-              <div class="rotated-th">
-                <span class="rotated-th__label">Review</span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <ol v-for="rating in userRatings" v-bind:key="rating.id">
-            <li>
-              <Rating
-                :rating="rating"
-                :picURL="user.picture"
-                :name="user.name"
-                :username="user.nickname"
-              />
-            </li>
-          </ol>
-          <p v-if="userRatings == ''">
-            Looks like there are no ratings for this user..
-          </p>
-        </tbody>
-      </table>
-    </div>
+    <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" />
+
     <div class="posts" v-if="sections.pl">
       <ul>
-        <Post
-          v-for="post in posts"
-          v-bind:key="post.id"
-          :content="post.content"
-          :postId="post.id"
-          :picURL="user.picture"
-          :name="user.name"
-          :username="user.nickname"
-          :date="dateFormat(post.createdDate)"
-        >
+        <Post v-for="post in posts" v-bind:key="post.id" :content="post.content" :postId="post.id" :name="user.name"
+          :username="user.nickname" :date="dateFormat(post.createdDate)">
         </Post>
       </ul>
     </div>
   </div>
 
   <!-- Edit Profile Modal -->
-  <div
-    class="modal fade"
-    id="modal_edit_profile"
-    tabindex="-1"
-    aria-labelledby="modal_demo_label"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="modal_edit_profile" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="modal_demo_label">Edit Profile</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="closeModal('ep')"
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="closeModal('ep')"></button>
         </div>
         <div class="modal-body d-flex flex-column">
-          <label class="m-2"
-            >Upload Profile Picture:
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              @change="checkFileSize"
-          /></label>
-          <textarea
-            v-model="bio"
-            class="bio m-2"
-            placeholder="Tell people a little about yourself."
-          ></textarea>
+          <label class="m-2">Upload Profile Picture:
+            <input type="file" accept="image/png, image/jpeg" @change="checkFileSize" /></label>
+          <textarea v-model="bio" class="bio m-2" placeholder="Tell people a little about yourself."></textarea>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="closeModal('ep')"
-          >
+          <button type="button" class="btn btn-secondary" @click="closeModal('ep')">
             Cancel
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="
-              closeModal('ep');
-              saveProfile();
-            "
-          >
+          <button type="button" class="btn btn-primary" @click="
+    closeModal('ep');
+  saveProfile();
+  ">
             Save
           </button>
         </div>
@@ -363,8 +228,54 @@ export default {
     },
     shareLink() {
       console.log("shareLink");
+      console.log(this.$route.fullPath)
     },
     dateFormat(date) {
+      date = date.slice(0, 10)
+      let split = date.split("-");
+      let y = split[0]
+      let m = split[1]
+      let d = split[2]
+
+      switch (m) {
+        case "01":
+          m = "January";
+          break;
+        case "02":
+          m = "February";
+          break;
+        case "03":
+          m = "March";
+          break;
+        case "04":
+          m = "April";
+          break;
+        case "05":
+          m = "May";
+          break;
+        case "06":
+          m = "June";
+          break;
+        case "07":
+          m = "July";
+          break;
+        case "08":
+          m = "August";
+          break;
+        case "09":
+          m = "September";
+          break;
+        case "10":
+          m = "October";
+          break;
+        case "11":
+          m = "November";
+          break;
+        case "12":
+          m = "December";
+          break;
+      }
+      date = `${m} ${d}, ${y}`
       return date;
     },
     checkFileSize(event) {
