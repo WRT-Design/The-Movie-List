@@ -1,5 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
+// import { PageLoader } from '@/components/page-loader.vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -17,10 +18,15 @@ library.add(fas, far)
 </template>
 
 <script>
+import PageLoader from '@/components/PageLoader.vue'
+
 export default {
   data() {
     return {
     }
+  },
+  components: {
+    PageLoader,
   },
   methods: {
     openModal() {

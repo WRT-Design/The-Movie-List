@@ -17,7 +17,8 @@ import { ref } from "vue";
                 width="25%" height="auto" />
               <img v-else src="@/assets/no-poster.png" width="25%" height="auto" class="p-2" />
               <section class="px-2">
-                <h2>{{ movie.titleText.text }} | 3.7 stars</h2>
+                <h2>{{ movie.titleText.text }}</h2>
+                <h2>3.7 stars</h2>
                 <section>
                   <b>Release Date: </b>
                   <span v-if="movie.releaseDate &&

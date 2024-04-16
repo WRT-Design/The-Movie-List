@@ -5,6 +5,8 @@ module.exports = (app) => {
 
   /**
    * Creates a new rating
+   *
+   * @query {String} type: simple || complex
    */
   app.post("/api/rating", rating.createOne);
 

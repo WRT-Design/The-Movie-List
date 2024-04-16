@@ -11,17 +11,9 @@ defineEmits(["select", "deselect"]);
 <template>
   <div>
     <!-- Search Bar Section -->
-    <label for="movieSearch"
-      >Movie:
-      <input
-        id="search"
-        type="text"
-        name="movieSearch"
-        placeholder="Search for a movie"
-        v-model="searchTerm"
-        @keyup="startSearch(controller)"
-        v-if="!selected"
-      />
+    <label for="movieSearch">Movie:
+      <input id="search" type="text" name="movieSearch" placeholder="Search for a movie" v-model="searchTerm"
+        @keyup="startSearch(controller)" v-if="!selected" />
       <div v-if="selected" id="selection">
         <p>{{ searchTerm }}</p>
         <p id="deselect" @click="deselect">X</p>
@@ -29,13 +21,12 @@ defineEmits(["select", "deselect"]);
     </label>
     <!-- results -->
     <div class="results">
-      <ul>
-        <li
-          v-for="movie in filteredResults"
-          :key="movie.id"
-          @click="select($event, movie.id)"
-        >
-          <h3 class="movieTitle">{{ movie.title }} ({{ movie.year }})</h3>
+      <ul class="list-group">
+        <li v-for="movie in filteredResults" :key="movie.id" @click="select($event, movie.id)"
+          class="list-group-item d-flex flex-row align-items-center li">
+          <img v-if="movie.image" :src="movie.image.url" width="40px" height="auto" class="m-2" />
+          <img v-else src="@/assets/no-poster.png" width="40px" height="auto" class="m-2" />
+          <h3 class="px-2">{{ movie.title }}</h3>
         </li>
       </ul>
     </div>
@@ -73,6 +64,7 @@ export default {
         try {
           const response = await axios.request(options);
           this.searchResults = response.data.results;
+          console.log(this.searchResults)
 
           for (let res of this.searchResults) {
             if (res.releaseYear == undefined) {
@@ -83,7 +75,7 @@ export default {
           this.filteredResults = this.searchResults.map((movie) => ({
             id: movie.id,
             title: movie.titleText.text,
-            year: movie.releaseYear.year,
+            image: movie.primaryImage,
           }));
         } catch (error) {
           console.error(error);
@@ -110,7 +102,7 @@ export default {
 </script>
 
 <style>
-.movieTitle {
+.li {
   cursor: pointer;
 }
 

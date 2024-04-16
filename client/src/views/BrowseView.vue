@@ -26,7 +26,7 @@ function closeModal(type) {
 <template>
   <NavC />
   <div class="browse">
-    <h1 class="text-center p-2">Explore</h1>
+    <h1 class="text-center p-3 m-0">Explore</h1>
     <section>
       <BrowseMovieSearch class="m-3" @newRating="
         newRating($event);

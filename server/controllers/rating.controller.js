@@ -6,6 +6,8 @@ exports.createOne = async (req, res) => {
   let movieId;
   let movie;
 
+  const type = req.query.type;
+
   const body = req.body;
 
   console.log("body: ", body);
@@ -63,40 +65,71 @@ exports.createOne = async (req, res) => {
     // set the movieId
     movieId = movie.id;
   }
-  console.log("movie: ", movie);
-  let values = Object.values(body.ratings);
-  let zeros = 0;
-  let sum = values.reduce((acc, val) => {
-    if (val === 0) {
-      zeros++;
-    }
-    return acc + val;
-  }, 0);
-  let average = sum / (values.length - zeros);
-  console.log("rating avg: ", average);
-  // create the rating and add to the DB
-  let data = {
-    movieId: movieId,
-    movie_title: movie.title,
-    userId: body.user,
-    average: average,
-    acting: body.ratings.acting,
-    attraction: body.ratings.attraction,
-    cinemetography: body.ratings.cinemetography,
-    dialogue: body.ratings.dialogue,
-    directing: body.ratings.directing,
-    editing: body.ratings.editing,
-    plot: body.ratings.plot,
-    soundtrack: body.ratings.soundtrack,
-    specialEffects: body.ratings.specialEffects,
-    theme: body.ratings.theme,
-    personalScore: body.personalScore,
-    review: body.review,
-    tot_stars: 0,
-    createdDate: new Date(),
-  };
-  let ratingResult = await Rating.create({ data });
-  console.log("new rating: ", ratingResult);
+
+  if (type == "complex") {
+    console.log("movie: ", movie);
+    let values = Object.values(body.ratings);
+    console.log("rating values: ", values);
+    let average = Util.utils.getRatingAverage(values);
+    console.log("rating avg: ", average);
+    let ps = parseFloat(body.personalScore);
+
+    // convert ratings to int
+    values = values.map((val) => parseFloat(val));
+    console.log("rating values: ", values);
+    // create the rating and add to the DB
+    let data = {
+      movieId: movieId,
+      movie_title: movie.title,
+      userId: body.user,
+      average: average,
+      acting: values[0],
+      attraction: values[1],
+      cinemetography: values[2],
+      dialogue: values[3],
+      directing: values[4],
+      editing: values[5],
+      plot: values[6],
+      soundtrack: values[7],
+      specialEffects: values[8],
+      theme: values[9],
+      personalScore: ps,
+      review: body.review,
+      tot_stars: 0,
+      createdDate: new Date(),
+    };
+    console.log("ratings data: ", data);
+    let ratingResult = await Rating.create({ data });
+    console.log("new rating: ", ratingResult);
+  }
+  if (type == "simple") {
+    console.log("simple rating");
+
+    // get the simple, one rating.
+    let data = {
+      movieId: movieId,
+      movie_title: movie.title,
+      userId: body.user,
+      average: average,
+      acting: body.rating,
+      attraction: body.rating,
+      cinemetography: body.rating,
+      dialogue: body.rating,
+      directing: body.rating,
+      editing: body.rating,
+      plot: body.rating,
+      soundtrack: body.rating,
+      specialEffects: body.rating,
+      theme: body.rating,
+      personalScore: body.rating,
+      review: body.review,
+      tot_stars: 0,
+      createdDate: new Date(),
+    };
+    console.log("ratings data: ", data);
+    let ratingResult = await Rating.create({ data });
+    console.log("new rating: ", ratingResult);
+  }
 
   // get all ratings for a single movie
   let movieRatings;
@@ -114,7 +147,7 @@ exports.createOne = async (req, res) => {
 
   console.log("movieRatings: ", movieRatings);
 
-  let avg = Util.utils.getAverage(movieRatings);
+  let avg = Util.utils.getMovieAverage(movieRatings);
 
   await fetch(`http://localhost:8080/api/movie/${movieId}`, {
     method: "PUT",
@@ -227,7 +260,7 @@ exports.deleteOne = async (req, res) => {
 
   console.log("movieRatings: ", movieRatings);
 
-  let data = Util.utils.getAverage(movieRatings);
+  let data = Util.utils.getMovieAverage(movieRatings);
 
   await fetch(`http://localhost:8080/api/movie/${movieId}`, {
     method: "PUT",

@@ -5,23 +5,6 @@ const props = defineProps({
   tableType: String
 })
 
-// let listData = ref()
-
-// console.log('setup')
-// console.log(props.tableType)
-// onMounted(async () => {
-//   console.log('onMounted')
-//   await fetch(`/api/api/${props.tableType}`, {
-//     method: 'GET',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   })
-//     .then(result => result.json())
-//     .then(data => console.log(data))
-//     .then(data => listData = data)
-// })
-
 </script>
 
 <template>
@@ -36,7 +19,11 @@ const props = defineProps({
     <tbody>
       <tr ref="listData" v-for="item of listData">
         <th scope="row">{{ listData.indexOf(item) + 1 }}</th>
-        <td>{{ item.title }}</td>
+        <td>
+          <RouterLink class="orange" :to="{ name: 'movie', params: { movieId: item.api_id } }">
+            {{ item.title }}
+          </RouterLink>
+        </td>
         <td>{{ item.avg_overall }}</td>
       </tr>
     </tbody>

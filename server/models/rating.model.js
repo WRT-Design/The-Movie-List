@@ -11,14 +11,15 @@ Rating.create = async (newRating) => {
     console.log("newRating: ", newRating);
     let rating = await prisma.rating.create(newRating);
     console.log("created rating");
+    console.log(rating);
 
     // connect the rating
     const connectRes = await prisma.user.update({
       where: {
-        id: newRating.userId,
+        id: newRating.data.userId,
       },
       data: {
-        posts: {
+        ratings: {
           connect: {
             id: rating.id,
           },

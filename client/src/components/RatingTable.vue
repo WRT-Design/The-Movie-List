@@ -28,14 +28,14 @@ const props = defineProps({
 <template>
   <div class="table-responsive">
     <table class="table table-striped" data-bs-theme="dark">
-      <thead class="d-flex">
-        <tr class="d-flex">
+      <thead>
+        <tr>
           <th scope="col">Movie</th>
           <th scope="col">Average</th>
           <th scope="col">Review</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="table-group-divider">
         <tr ref="listData" v-for="item of listData" :key="item.id" :id="item.id">
           <th scope="row">{{ item.movie_title }}</th>
           <td>{{ item.average }}</td>

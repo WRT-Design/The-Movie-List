@@ -8,8 +8,8 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  username    String
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  username    String     @unique
   first_name  String
   email       String
   last_name   String?
@@ -19,14 +19,13 @@ model User {
   comments    Comment[]
   stars       Star[]
   settings    Settings[]
-  createdDate DateTime  @db.Date
-  followers   Follows[] @relation("follower")
-  following   Follows[] @relation("following")
+  createdDate DateTime   @db.Date
+  followers   Follows[]  @relation("follower")
+  following   Follows[]  @relation("following")
 }
 
 model Rating {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  movie          Movie?   @relation(fields: [movieId], references: [id])
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
   movie_title    String
   average        Float
   acting         Float
@@ -44,10 +43,11 @@ model Rating {
   stars          Star[]
   comments       Comment[]
   tot_stars      Int
-  user           User?    @relation(fields: [userId], references: [id])
-  userId         String?  @db.ObjectId
-  movieId        String?  @db.ObjectId
-  createdDate    DateTime @db.Date
+  user           User?     @relation(fields: [userId], references: [id])
+  userId         String?   @db.ObjectId
+  movie          Movie?    @relation(fields: [movieId], references: [id])
+  movieId        String?   @db.ObjectId
+  createdDate    DateTime  @db.Date
 }
 
 model Post {
@@ -89,7 +89,7 @@ model Star {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   post        Post?    @relation(fields: [postId], references: [id])
   postId      String?  @db.ObjectId
-  ratinig     Rating?    @relation(fields: [ratingId], references: [id])
+  ratinig     Rating?  @relation(fields: [ratingId], references: [id])
   ratingId    String?  @db.ObjectId
   userId      String   @db.ObjectId
   user        User     @relation(fields: [userId], references: [id])
@@ -118,10 +118,10 @@ model Movie {
 }
 
 model Settings {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User    @relation(fields: [userId], references: [id])
-  userId String  @db.ObjectId 
-  code   String 
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+  code        String
   createdDate DateTime @db.Date
 }
 

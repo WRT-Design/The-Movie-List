@@ -24,29 +24,39 @@ function openModal(type) {
 function closeModal(type) {
   if (type == "ep") state.modal_edit_profile.hide();
 }
+
+defineProps(['authUsername'])
 </script>
 
 <template>
   <NavC @post="newPost" @rating="newRating" />
   <div class="profile">
-    <div>
-      <section class="profile-info">
+    <div class="p-2">
+      <section class="d-flex p-2">
         <img v-if="dbUser.picture" :src="dbUser.picture" alt="avatar" width="200px" height="200px" />
         <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="200px" height="200px" />
-        <section>
+        <section class="p-2">
           <h2>{{ dbUser.first_name }}</h2>
-          <h4>@{{ dbUser.username }}</h4>
+          <h4 class="text-white-50">@{{ dbUser.username }}</h4>
           <p>Bio: {{ bio }}</p>
         </section>
       </section>
-      <section>
-        <a>Followers</a>
-        <a>Following</a>
+      <section class="d-flex justify-content-between">
+        <div class="p-2">
+          <a class="plain p-3 text-white">{{ followersCount }} Followers</a>
+          <a class="plain text-white">{{ followingCount }} Following</a>
+        </div>
+        <button v-if="auth && user.nickname != dbUser.username" type="button" class="btn btn-primary btn-light m-2"
+          @click="createFollow">Follow</button>
+        <!-- <button v-if="auth && user.nickname != dbUser.username && userFollows()" type="button"
+          class="btn btn-primary btn-light m-2" @click="createFollow">Unfollow</button> -->
+
       </section>
-      <section>
+      <section class="p-2">
         <!-- Open a modal for profile editing -->
-        <button type="button" @click="openModal('ep')">Edit Profile</button>
-        <button type="button" @click="shareLink">Share Profile</button>
+        <button v-if="auth && user.nickname == dbUser.username" type="button" class="btn btn-primary btn-light mr-2"
+          @click="openModal('ep')">Edit Profile</button>
+        <button type="button" class="btn btn-primary btn-light mx-2" @click="shareLink">Share Profile</button>
       </section>
     </div>
 
@@ -62,7 +72,7 @@ function closeModal(type) {
       </button>
     </div>
 
-    <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" />
+    <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" class="d-flex" />
 
     <div class="posts" v-if="sections.pl">
       <ul>
@@ -107,6 +117,7 @@ export default {
   data() {
     return {
       auth: ref(this.$auth0.isAuthenticated),
+      authId: null,
       user: ref(this.$auth0.user),
       dbUser: ref(""),
       posts: ref([]),
@@ -117,11 +128,15 @@ export default {
       }),
       bio: ref(""),
       userRatings: ref(""),
+      followers: ref([]),
+      following: ref([]),
+      followersCount: ref(0),
+      followingCount: ref(0),
     };
   },
   async beforeMount() {
     // use this to check if a user is already logged in
-    console.log(this.$route.params.username);
+    console.log(this.$auth0.user.nickname);
 
     let user;
     await fetch(`/api/api/user/${this.$route.params.username}`, {
@@ -141,6 +156,33 @@ export default {
 
     this.getRatings(user.id);
     this.getPosts(user.id);
+
+    // get the followers and following for the user 
+    await fetch(`/api/api/follows/followers/${this.dbUser.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result)
+        this.followers = result.follows;
+        this.followersCount = this.followers.length
+      });
+
+    await fetch(`/api/api/follows/following/${this.dbUser.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result)
+        this.following = result.follows;
+        this.followingCount = this.following.length
+      });
   },
   methods: {
     authCheck() {
@@ -299,8 +341,49 @@ export default {
         }
       }
     },
-  },
-};
+    createFollow() {
+      const followerUsername = this.user.nickname; // user logged in
+      const followingId = this.dbUser.id; // profile you're viewing
+
+      const body = {
+        followerUsername: followerUsername,
+        followingId: followingId,
+      }
+
+      fetch(`/api/api/follows`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+        });
+    },
+    async userFollows() {
+      if (!this.authId) {
+        await fetch(`/api/api/user/${this.$auth0.user.nickname}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            this.authId = result.id;
+            console.log(this.authId);
+          });
+      }
+      for (let follower of this.followers) {
+        if (follower.id == this.authId) {
+          return true;
+        }
+      }
+    }
+  }
+}
 </script>
 
 <style>
@@ -407,5 +490,9 @@ tbody td {
 
 #delBtnPost {
   float: right;
+}
+
+.plain {
+  text-decoration: none;
 }
 </style>

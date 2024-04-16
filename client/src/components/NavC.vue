@@ -2,6 +2,11 @@
 import LoginC from "../components/LoginC.vue";
 import LogoutC from "../components/LogoutC.vue";
 import MovieSearch from "../components/MovieSearch.vue";
+import StarRatings from '../components/StarRatings.vue'
+
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
+
 
 import { Modal } from "bootstrap";
 import { ref, reactive, onMounted } from "vue";
@@ -36,7 +41,7 @@ function closeModal(type) {
 </script>
 
 <template>
-  <div class="navWrapper text-light d-flex flex-column" data-bs-theme="dark">
+  <div class="navWrapper text-light d-flex flex-column align-items-center" data-bs-theme="dark">
     <RouterLink to="/" class="navbar-brand">
       <img alt="The Movie List logo" class="logo text-center" src="@/assets/TML_white_1.svg" width="125" height="125" />
     </RouterLink>
@@ -51,9 +56,11 @@ function closeModal(type) {
             <RouterLink class="nav-link text-center" to="/">Home</RouterLink>
             <RouterLink v-if="auth" class="nav-link text-center" :to="{
               name: 'profile',
-              params: { username: username },
+              params: {
+                username: 'thack.whack'
+              }
             }">Profile</RouterLink>
-            <RouterLink class="nav-link text-center" to="/browse">Browse</RouterLink>
+            <RouterLink class="nav-link text-center" to="/browse">Explore</RouterLink>
             <RouterLink v-if="auth" class="nav-link text-center" to="/settings">Settings</RouterLink>
             <button v-if="auth" type="button" class="nav-link newRating link" @click="openModal('r')">
               New Rating
@@ -92,60 +99,83 @@ function closeModal(type) {
           <h3>Movie</h3>
           <MovieSearch @select="select($event)" @deselect="deselect" />
           <h3>Ratings</h3>
-          <div class="ratings">
-            <div>
-              <div>
-                <label for="acting">Acting</label>
-                <input id="acting" name="acting" type="number" max="5" min="0" step=".1" v-model="ratings.acting" />
+          <div class="">
+            <section class="d-flex justify-content-around">
+              <p class="active ratingNav" @click="toggle">Simple Rating</p>
+              <p class="ratingNav" @click="toggle">Complex Rating</p>
+            </section>
+            <section>
+              <div v-if="simple" class="form-group">
+                <div class="d-flex justify-content-between">
+                  <span for="rating">Rating: {{ movieStars }} Stars</span>
+                  <StarRatings :star="movieStars" />
+
+                </div>
+                <input type="range" class="form-range" min="1.0" max="5.0" step="0.5" id="rating"
+                  v-model="movieStars"></input>
               </div>
-              <div>
-                <label for="attraction">Attraction</label>
-                <input id="attraction" name="attraction" type="number" max="5" min="0" step=".1"
-                  v-model="ratings.attraction" />
+              <div v-if="!simple" class="form-group">
+                <div>
+                  <label class="d-flex justify-content-between" for="acting">
+                    <span>Acting: {{ ratings.acting }}</span>
+                    <StarRatings :star="average" />
+
+                  </label>
+                  <input id="acting" class="form-range" name="acting" type="range" max=5 min=1 step=.1
+                    v-model="ratings.acting" />
+                </div>
+                <div>
+                  <label for="attraction">Attraction: {{ ratings.attraction }}</label>
+                  <input id="attraction" class="form-range" name="attraction" type="range" max=5 min=1 step=.1
+                    v-model="ratings.attraction" />
+                </div>
+                <div>
+                  <label for="cinemetography">Cinemetography: {{ ratings.cinemetography }}</label>
+                  <input id="cinemetography" class="form-range" name="cinemetography" type="range" max="5" min=""
+                    step=".1" v-model="ratings.cinemetography" />
+                </div>
+                <div>
+                  <label for="dialogue">Dialogue: {{ ratings.dialogue }}</label><input id="dialogue" class="form-range"
+                    name="dialogue" type="range" max="5" min="" step=".1" v-model="ratings.dialogue" />
+                </div>
+                <div>
+                  <label for="directing">Directing: {{ ratings.directing }}</label><input id="directing"
+                    class="form-range" name="directing" type="range" max="5" min="" step=".1"
+                    v-model="ratings.directing" />
+                </div>
+
+                <div>
+                  <label for="editing">Editing: {{ ratings.editing }}</label>
+                  <input id="editing" class="form-range" name="editing" type="range" max="5" min="" step=".1"
+                    v-model="ratings.editing" />
+                </div>
+                <div>
+                  <label for="plot">Plot: {{ ratings.plot }}</label>
+                  <input id="plot" class="form-range" name="plot" type="range" max="5" min="" step=".1"
+                    v-model="ratings.plot" />
+                </div>
+                <div>
+                  <label for="soundtrack">Soundtrack: {{ ratings.soundtrack }}</label>
+                  <input id="soundtrack" class="form-range" name="soundtrack" type="range" max="5" min="" step=".1"
+                    v-model="ratings.soundtrack" />
+                </div>
+                <div>
+                  <label for="specialEffects">Special Effects: {{ ratings.specialEffects }}</label>
+                  <input id="specialEffects" class="form-range" name="specialEffects" type="range" max="5" min=""
+                    step=".1" v-model="ratings.specialEffects" />
+                </div>
+                <div>
+                  <label for="theme">Theme: {{ ratings.theme }}</label>
+                  <input id="theme" class="form-range" name="theme" type="range" max="5" min="" step=".1"
+                    v-model="ratings.theme" />
+                </div>
+                <div id="psLabel">
+                  <label for="personalScore">Personal Score: {{ personalScore }}</label>
+                  <input id="personalScore" class="form-range" name="personalScore" type="range" max="5" min=""
+                    step=".1" v-model="personalScore" />
+                </div>
               </div>
-              <div>
-                <label for="cinemetography">Cinemetography</label>
-                <input id="cinemetography" name="cinemetography" type="number" max="5" min="0" step=".1"
-                  v-model="ratings.cinemetography" />
-              </div>
-              <div>
-                <label for="dialogue">Dialogue</label><input id="dialogue" name="dialogue" type="number" max="5" min="0"
-                  step=".1" v-model="ratings.dialogue" />
-              </div>
-              <div>
-                <label for="directing">Directing</label><input id="directing" name="directing" type="number" max="5"
-                  min="0" step=".1" v-model="ratings.directing" />
-              </div>
-              <div id="psLabel">
-                <label for="personalScore">Personal Score</label>
-                <input id="personalScore" name="personalScore" type="number" max="5" min="0" step=".1"
-                  v-model="personalScore" />
-              </div>
-            </div>
-            <div>
-              <div>
-                <label for="editing">Editing</label>
-                <input id="editing" name="editing" type="number" max="5" min="0" step=".1" v-model="ratings.editing" />
-              </div>
-              <div>
-                <label for="plot">Plot</label>
-                <input id="plot" name="plot" type="number" max="5" min="0" step=".1" v-model="ratings.plot" />
-              </div>
-              <div>
-                <label for="soundtrack">Soundtrack</label>
-                <input id="soundtrack" name="soundtrack" type="number" max="5" min="0" step=".1"
-                  v-model="ratings.soundtrack" />
-              </div>
-              <div>
-                <label for="specialEffects">Special Effects</label>
-                <input id="specialEffects" name="specialEffects" type="number" max="5" min="0" step=".1"
-                  v-model="ratings.specialEffects" />
-              </div>
-              <div>
-                <label for="theme">Theme</label>
-                <input id="theme" name="theme" type="number" max="5" min="0" step=".1" v-model="ratings.theme" />
-              </div>
-            </div>
+            </section>
           </div>
 
           <div id="psLabel"></div>
@@ -160,7 +190,7 @@ function closeModal(type) {
             ">
             Cancel
           </button>
-          <button type="button" class="btn btn-primary" id="post-btn" @click="
+          <button type=" button" class="btn btn-primary" id="post-btn" @click="
               closeModal('r');
             postRating();
             " disabled>
@@ -210,6 +240,9 @@ export default {
       auth: ref(this.$auth0.isAuthenticated),
       username: ref('thack.whack'),
       postContent: ref(""),
+      simple: ref(true),
+      movie: ref(),
+      movieStars: ref(0),
       ratings: {
         acting: ref(0),
         attraction: ref(0),
@@ -232,18 +265,7 @@ export default {
       const username = this.$auth0.user._rawValue.nickname;
       let average;
       let total = 0;
-      let ratingArr = [];
-
-      for (let rating in this.ratings) {
-        if (this.ratings[rating] != 0) ratingArr.push(this.ratings[rating]);
-      }
-      for (let rating of ratingArr) {
-        total += rating;
-      }
-
-      if (ratingArr.length == 0) average = 0;
-      else average = total / ratingArr.length;
-      console.log("average: ", average);
+      let ratingArr = []; 
 
       let movieTitle = document.querySelector("#selection p").innerText;
 
@@ -261,35 +283,69 @@ export default {
           user = result.user;
         });
 
-      const body = {
-        user: user.id,
-        movie: movieTitle,
-        movieId: this.movieId,
-        ratings: {
-          acting: this.ratings.acting,
-          attraction: this.ratings.attraction,
-          cinemetography: this.ratings.cinemetography,
-          dialogue: this.ratings.dialogue,
-          directing: this.ratings.directing,
-          editing: this.ratings.editing,
-          plot: this.ratings.plot,
-          soundtrack: this.ratings.soundtrack,
-          specialEffects: this.ratings.specialEffects,
-          theme: this.ratings.theme,
-        },
-        personalScore: this.personalScore,
-        review: this.review,
-      };
+      if (!this.simple) {
+        for (let rating in this.ratings) {
+          if (this.ratings[rating] != 0) ratingArr.push(this.ratings[rating]);
+        }
+        for (let rating of ratingArr) {
+          total += rating;
+        }
 
-      await fetch(`/api/api/rating`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+        if (ratingArr.length == 0) average = 0;
+        else average = total / ratingArr.length;
+        console.log("average: ", average);
 
-      this.$emit("rating");
+
+        const body = {
+          user: user.id,
+          movie: movieTitle,
+          movieId: this.movieId,
+          ratings: {
+            acting: this.ratings.acting,
+            attraction: this.ratings.attraction,
+            cinemetography: this.ratings.cinemetography,
+            dialogue: this.ratings.dialogue,
+            directing: this.ratings.directing,
+            editing: this.ratings.editing,
+            plot: this.ratings.plot,
+            soundtrack: this.ratings.soundtrack,
+            specialEffects: this.ratings.specialEffects,
+            theme: this.ratings.theme,
+          },
+          personalScore: this.personalScore,
+          review: this.review,
+        };
+
+        await fetch(`/api/api/rating?type=complex`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+
+        this.$emit("rating");
+      }
+      if (this.simple) {
+        const body = {
+          user: user.id,
+          movie: movieTitle,
+          movieId: this.movieId,
+          rating: this.movieStars,
+          personalScore: this.movieStars,
+          review: this.review,
+        };
+
+        await fetch(`/api/api/rating?type=simple`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+
+        this.$emit("rating");
+      }
     },
     cancelRating() {
       console.log("cancel rating");
@@ -360,6 +416,17 @@ export default {
     login(e) {
       console.log('login')
       console.log(e)
+    },
+    toggle(event) {
+      if (!event.target.classList || !event.target.classList.contains("active")) {
+        event.target.classList.add('active')
+        if (event.target.nextSibling)
+          event.target.nextSibling.classList.remove('active');
+        else
+          event.target.previousSibling.classList.remove('active')
+        this.simple = !this.simple;
+      }
+
     }
   },
   async beforeMount() {
