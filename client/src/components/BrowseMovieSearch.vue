@@ -2,6 +2,12 @@
 import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+import Card from 'primevue/card';
+import FloatLabel from 'primevue/floatlabel';
+import InputText from 'primevue/inputtext';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+
 const controller = new AbortController();
 // eslint-disable-next-line no-unused-vars
 const signal = controller.signal;
@@ -12,66 +18,58 @@ defineEmits(["newRating"]);
 <template>
   <div>
     <!-- Search Bar Section -->
-    <input id="search" class="form-control form-control-lg" type="text" name="movieSearch"
-      placeholder="Search for a movie" v-model="searchTerm" @keyup="startSearch(controller)" v-if="!selected" />
+    <InputText id="search" class="h-2rem" type="text" name="movieSearch" placeholder="Search for a movie"
+      v-model="searchTerm" @keyup="startSearch(controller)" v-if="!selected" />
     <div v-if="selected" id="selection">
       <p>{{ searchTerm }}</p>
       <p id="deselect" @click="deselect">X</p>
     </div>
     <!-- results -->
-    <div class="results">
-      <ul class="p-0 m-0">
-        <li v-for="movie in searchResults" :key="movie.id" class="d-flex mt-2 pt-2 card" data-bs-theme="dark">
-          <div class="card-body">
-            <h3 class="movieTitle card-header">
-              <RouterLink class="orange" :to="{ name: 'movie', params: { movieId: movie.id } }">
+    <div class="">
+      <Card v-for="movie in searchResults" :key="movie.id" class="card">
+        <template #content>
+          <div class="flex">
+            <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
+              width="25%" height="25%" />
+            <img v-else src="@/assets/no-poster.png" width="25%" height="25%" />
+            <div class="px-2">
+              <RouterLink class="link" :to="{ name: 'movie', params: { movieId: movie.id } }">
                 {{ movie.titleText.text }}
               </RouterLink>
-            </h3>
-            <div class="d-flex">
-              <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
-                width="25%" height="25%" class="p-2" />
-              <img v-else src="@/assets/no-poster.png" width="25%" height="25%" class="p-2" />
-              <div class="p-2">
 
-                <h4 v-if="movie.releaseDate">
-                  Release Date:
-                  {{ getMonth(movie.releaseDate.month) }}
-                  {{ movie.releaseDate.day }},
-                  {{ movie.releaseDate.year }}
-                </h4>
-                <h4>Directors: <span v-if="movie.directors && movie.directors[0]" v-for="d of movie.directors">
-                    <span v-for="d of d.credits">
-                      {{ d.name.nameText.text }}
-                    </span>
+              <h4 v-if="movie.releaseDate">
+                <span class="info">Release Date:</span>
+                {{ getMonth(movie.releaseDate.month) }}
+                {{ movie.releaseDate.day }},
+                {{ movie.releaseDate.year }}
+              </h4>
+              <h4><span class="info">Directors:</span> <span v-if="movie.directors && movie.directors[0]"
+                  v-for="d of movie.directors">
+                  <span v-for="d of d.credits">
+                    {{ d.name.nameText.text }}
                   </span>
-                  <span v-else>None</span>
-                </h4>
-                <h4>
-                  Writers: <span v-if="movie.writers && movie.writers[0]" v-for="w of movie.writers">
-                    <span v-for="w of w.credits">
-                      {{ w.name.nameText.text }}
-                    </span>
+                </span>
+                <span v-else>None</span>
+              </h4>
+              <h4>
+                <span class="info">Writers:</span> <span v-if="movie.writers && movie.writers[0]"
+                  v-for="w of movie.writers">
+                  <span v-for="w of w.credits">
+                    {{ w.name.nameText.text }}
                   </span>
-                  <span v-else>None</span>
-                </h4>
-                <p>
-                  Plot:
-                  <span v-if="movie.plot && !movie.plot.plotText">
-                    {{ movie.plot }}</span>
-                  <span v-else>No Plot Available</span>
-                </p>
-              </div>
+                </span>
+                <span v-else>None</span>
+              </h4>
+              <p>
+                <span class="info">Plot: </span>
+                <span v-if="movie.plot && !movie.plot.plotText">
+                  {{ movie.plot }}</span>
+                <span v-else>No Plot Available</span>
+              </p>
             </div>
-            <section class="card-footer">
-              <button type="button" class="btn primary bg-secondary text-bg-dark m-2" @mouseenter="rateHover = true"
-                @mouseleave="rateHover = false" @click="newRating($event, movie.id)">Rate
-                <FontAwesomeIcon icon="fa-regular fa-star" color="white" />
-              </button>
-            </section>
           </div>
-        </li>
-      </ul>
+        </template>
+      </Card>
     </div>
   </div>
 </template>
@@ -184,9 +182,30 @@ export default {
   cursor: pointer;
 }
 
-div label,
+.link {
+  text-decoration: none;
+  color: var(--primary-400);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.card {
+  background-color: var(--highlight-bg);
+  margin: 1rem;
+}
+
+/* div label,
 #search {
   width: 100%;
+} */
+#search {
+  height: 1.5em;
+  line-height: 1.5em;
+}
+
+.info {
+  /* color: var(--primary-400); */
+  font-weight: 700;
 }
 
 #selection {

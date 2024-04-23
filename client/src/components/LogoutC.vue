@@ -1,5 +1,9 @@
+<script setup>
+import Button from 'primevue/button';
+</script>
+
 <template>
-  <button type="button" @click="logout">Logout</button>
+  <Button severity="secondary" @click="logout">Logout</Button>
 </template>
 
 <script>
@@ -20,7 +24,7 @@ export default {
 </script>
 
 <style scoped>
-button {
+/* button {
   margin: 10px;
   padding: 10px 20px;
   border: 1px solid #000;
@@ -29,5 +33,5 @@ button {
   color: #fff;
   cursor: pointer;
   border: 1px solid var(--tml-orange);
-}
+} */
 </style>

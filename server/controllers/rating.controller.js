@@ -104,24 +104,25 @@ exports.createOne = async (req, res) => {
   }
   if (type == "simple") {
     console.log("simple rating");
+    let rating = parseFloat(body.rating)
 
     // get the simple, one rating.
     let data = {
       movieId: movieId,
       movie_title: movie.title,
       userId: body.user,
-      average: average,
-      acting: body.rating,
-      attraction: body.rating,
-      cinemetography: body.rating,
-      dialogue: body.rating,
-      directing: body.rating,
-      editing: body.rating,
-      plot: body.rating,
-      soundtrack: body.rating,
-      specialEffects: body.rating,
-      theme: body.rating,
-      personalScore: body.rating,
+      average: rating,
+      acting: rating,
+      attraction: rating,
+      cinemetography: rating,
+      dialogue: rating,
+      directing: rating,
+      editing: rating,
+      plot: rating,
+      soundtrack: rating,
+      specialEffects: rating,
+      theme: rating,
+      personalScore: rating,
       review: body.review,
       tot_stars: 0,
       createdDate: new Date(),

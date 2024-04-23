@@ -1,33 +1,29 @@
 <script setup>
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';                   // optional
+
+
+import StarRatings from '../components/StarRatings.vue'
+
 import { ref, defineProps, onMounted } from "vue";
 
 const props = defineProps({
   tableType: String
 })
 
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
 
 <template>
-  <table class="table table-striped" data-bs-theme="dark">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Average</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ref="listData" v-for="item of listData">
-        <th scope="row">{{ listData.indexOf(item) + 1 }}</th>
-        <td>
-          <RouterLink class="orange" :to="{ name: 'movie', params: { movieId: item.api_id } }">
-            {{ item.title }}
-          </RouterLink>
-        </td>
-        <td>{{ item.avg_overall }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <DataTable :value="listData">
+    <Column field="num" header="#" sortable></Column>
+    <Column field="title" header="Title" sortable></Column>
+    <Column field="avg_overall" header="Rating" sortable></Column>
+    <Column field="title" header="Title" sortable></Column>
+  </DataTable>
 </template>
 
 <script>
@@ -62,11 +58,15 @@ export default {
     })
       .then(result => result.json())
       .then(data => {
-        if (this.$props.tableType === 'movie')
+        if (this.$props.tableType === 'movie') {
           this.listData = data.sort((a, b) => { return b.avg_overall - a.avg_overall })
+        }
         else this.listData = Object.values(data).map((obj) => { return obj })[0]
       })
     console.log(this.listData)
+    for (let item of this.listData) {
+      item.num = this.listData.indexOf(item) + 1;
+    }
   },
 
 }

@@ -5,7 +5,7 @@ defineProps(['star'])
 </script>
 
 <template>
-  <span>
+  <div>
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
 
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="star >= 2" />
@@ -24,5 +24,5 @@ defineProps(['star'])
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="star >= 4.5" />
     <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
 
-  </span>
+  </div>
 </template>
