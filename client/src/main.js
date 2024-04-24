@@ -26,6 +26,8 @@ const store = createStore({
 const app = createApp(App);
 
 app.use(PrimeVue);
+import Button from "primevue/button";
+app.component("Button", Button);
 
 app.use(router);
 

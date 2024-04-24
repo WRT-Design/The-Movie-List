@@ -46,8 +46,21 @@ defineProps({
 
   <div class="">
 
-    <Menubar v-if="!auth" :model="unAuthItems" />
-    <div class="h-full flex-shrink-0 absolute left-0 top-0 w-2">
+    <div class="h-full flex-shrink-0 absolute left-0 top-0 w-2 z-1" style="width:180px;">
+      <Menubar v-if="!auth" :model="unAuthItems" class="flex flex-column h-full" style="width:180px;">
+        <template #start>
+          <RouterLink to="/" class="navbar-brand">
+            <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
+          </RouterLink>
+        </template>
+        <template #end>
+          <section class="logInOut py-5">
+            <LoginC v-if="!auth" @login="login($event)" />
+            <LogoutC v-if="auth" />
+          </section>
+          &copy; 2024 William Thackeray
+        </template>
+      </Menubar>
       <Menubar v-if="auth" :model="authItems" class="flex flex-column h-full">
         <template #start>
           <RouterLink to="/" class="navbar-brand">
@@ -55,7 +68,7 @@ defineProps({
           </RouterLink>
         </template>
         <template #end>
-          <section class="logInOut">
+          <section class="logInOut py-5">
             <LoginC v-if="!auth" @login="login($event)" />
             <LogoutC v-if="auth" />
           </section>

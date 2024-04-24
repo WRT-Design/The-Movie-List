@@ -2,14 +2,13 @@
 import MovieTable from "../components/MovieTable.vue";
 import NavC from "../components/NavC.vue";
 
-
 import { ref } from "vue";
 </script>
 
 <template>
-  <main class="container-fluid m-0 p-0" data-bs-theme="dark">
+  <main class="min-h-screen flex relative lg:static">
     <NavC :user="user || {}" />
-    <div class="main" data-bs-theme="dark">
+    <div class="main min-h-screen flex flex-column relative flex-auto">
       <section class="homeHeader">
         <h1>The Movie List</h1>
         <h2 v-if="auth">Welcome back {{ user.name }}</h2>

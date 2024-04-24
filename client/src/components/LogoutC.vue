@@ -1,9 +1,5 @@
-<script setup>
-import Button from 'primevue/button';
-</script>
-
 <template>
-  <Button severity="secondary" @click="logout">Logout</Button>
+  <Button severity="secondary" label="Logout" icon="pi pi-sign-out" @click="logout" />
 </template>
 
 <script>

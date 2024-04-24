@@ -1,11 +1,6 @@
-<script setup>
-import Button from 'primevue/button';
-</script>
-
 <template>
-  <Button type="button" @click="login">Login</Button>
+  <Button severity="secondary" label="Login" icon="pi pi-sign-in" @click="login" />
 </template>
-
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
 
@@ -23,7 +18,6 @@ export default {
       isAuthenticated,
     };
 
-    // $emit('login', user, isAuthenticated);
   },
 }
 </script>
@@ -39,4 +33,7 @@ export default {
   cursor: pointer;
   border: 1px solid var(--tml-orange);
 } */
+.p-button-label {
+  background-color: red;
+}
 </style>
