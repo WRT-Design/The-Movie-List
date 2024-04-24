@@ -1,11 +1,22 @@
+<!-- <script setup>
+import { useAuthStore } from '@/stores/AuthStore'
+</script> -->
+
 <template>
   <Button severity="secondary" label="Login" icon="pi pi-sign-in" @click="login" />
 </template>
 <script>
 import { useAuth0 } from '@auth0/auth0-vue';
 
+
 export default {
   setup() {
+    // const store = useStore(this.$pinia)
+    // console.log(store)
+
+    // // const store = useAuthStore()
+
+    // console.log(store.user)
 
     const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 

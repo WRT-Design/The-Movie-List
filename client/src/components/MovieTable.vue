@@ -20,7 +20,13 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 <template>
   <DataTable :value="listData">
     <Column field="num" header="#" sortable></Column>
-    <Column field="title" header="Title" sortable></Column>
+    <Column field="api_id" header="Title" sortable>
+      <template #body="slotProps">
+        <RouterLink :to="{ name: 'movie', params: { movieId: slotProps.data.api_id } }" class="no-underline"
+          style="color: var(--primary-color)">{{
+    slotProps.data.title }}</RouterLink>
+      </template>
+    </Column>
     <Column field="avg_overall" header="Rating" sortable></Column>
     <Column field="title" header="Title" sortable></Column>
   </DataTable>

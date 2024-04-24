@@ -11,6 +11,12 @@ import Button from 'primevue/button';
 
 import { ref, reactive, onMounted } from "vue";
 
+import { useAuthStore } from '@/stores/AuthStore'
+
+const store = useAuthStore()
+
+console.log(store.user)
+
 defineEmits(["post", "rating"]);
 defineProps({
   user: {
@@ -18,6 +24,7 @@ defineProps({
     required: true,
   },
 })
+
 
 // const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
@@ -221,7 +228,7 @@ export default {
           label: "Profile",
           icon: 'pi pi-user',
           command: () => {
-            this.$router.push('/profile')
+            this.$router.push(`/profile/thack.whack`)
           }
         },
         {
@@ -254,18 +261,6 @@ export default {
             this.pVisible = true
           }
         },
-        {
-          label: "Login",
-          icon: "pi pi-sign-in",
-          command: () => {
-          }
-        },
-        {
-          label: "Logout",
-          icon: "pi pi-sign-out",
-          command: () => {
-          }
-        }
       ]),
       rVisible: ref(false),
       pVisible: ref(false),
