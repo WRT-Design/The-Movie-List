@@ -1,4 +1,5 @@
 const Rating = require("../models/rating.model.js");
+const Movie = require("../models/movie.model.js");
 const Util = require("./controller.util.js");
 
 exports.createOne = async (req, res) => {
@@ -12,21 +13,18 @@ exports.createOne = async (req, res) => {
 
   console.log("body: ", body);
 
-  // first, check if the movie is in the DB,
-  await fetch(`http://localhost:8080/api/movie/${body.movieId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      movie = result.movie;
-    });
+  movie = await Movie.findBy("api_id", body.movieId);
 
   if (!movie) {
     // no movie found
     console.log("no movie found, we will create one");
+
+    console.log("movieInfo", body.movieInfo);
+
+    let genres = "";
+    for (let genre of body.movieInfo.genres.genres) {
+      genres += `${genre.text},`;
+    }
 
     // create movieBody
     const movieBody = {
@@ -43,22 +41,16 @@ exports.createOne = async (req, res) => {
       avg_soundtrack: 0,
       avg_specialEffects: 0,
       avg_theme: 0,
+      trailer: body.movieInfo.trailer,
+      poster: body.movieInfo.image.url,
+      genres: genres,
+      year: body.movieInfo.year,
+      plot: body.movieInfo.plot,
       createdDate: new Date(),
     };
 
-    // create a new movie in the DB
-    await fetch(`http://localhost:8080/api/movie`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(movieBody),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        movie = result.movie;
-        movieId = result.movie.id;
-      });
+    movie = await Movie.create({ movieBody });
+    movieId = movie.movie.id;
   } else {
     // movie found
     console.log("movie found, we will get the id");
@@ -104,7 +96,7 @@ exports.createOne = async (req, res) => {
   }
   if (type == "simple") {
     console.log("simple rating");
-    let rating = parseFloat(body.rating)
+    let rating = parseFloat(body.rating);
 
     // get the simple, one rating.
     let data = {
@@ -133,34 +125,13 @@ exports.createOne = async (req, res) => {
   }
 
   // get all ratings for a single movie
-  let movieRatings;
-
-  await fetch(`http://localhost:8080/api/rating/movie?id=${movieId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      movieRatings = result.result;
-    });
+  let movieRatings = await Rating.getAllRatings("movieId", movieId);
 
   console.log("movieRatings: ", movieRatings);
 
   let avg = Util.utils.getMovieAverage(movieRatings);
 
-  await fetch(`http://localhost:8080/api/movie/${movieId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(avg),
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      console.log("updated movie: ", result);
-    });
+  Movie.update(movieId, avg);
 
   res.status(200).send({ message: "Rating created successfully." });
 };

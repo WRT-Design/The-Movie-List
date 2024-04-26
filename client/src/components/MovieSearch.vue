@@ -44,6 +44,7 @@ export default {
       searchTerm: "",
       selected: ref(false),
       movieId: "",
+      selectedMovie: {}
     };
   },
   methods: {
@@ -76,6 +77,10 @@ export default {
             id: movie.id,
             title: movie.titleText.text,
             image: movie.primaryImage,
+            trailer: movie.trailer,
+            genres: movie.genres,
+            year: movie.releaseYear.year,
+            plot: movie.plot ? movie.plot.plotText.plainText : null
           }));
         } catch (error) {
           console.error(error);
@@ -87,9 +92,14 @@ export default {
       this.searchTerm = this.filteredResults.filter(
         (movie) => movie.id == movieId
       )[0].title;
+      for (let movie of this.filteredResults) {
+        if (movie.id == movieId) {
+          this.selectedMovie = movie
+        }
+      }
       this.filteredResults = [];
       this.selected = true;
-      this.$emit("select", this.movieId);
+      this.$emit("select", this.selectedMovie);
     },
     deselect() {
       this.searchTerm = "";

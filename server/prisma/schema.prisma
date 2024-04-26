@@ -113,6 +113,12 @@ model Movie {
   avg_soundtrack     Float
   avg_specialEffects Float
   avg_theme          Float
+  trailer            String?
+  poster             String?
+  genres             String? // comma separated
+  year               Int?
+  runtime            Int? // number of seconds
+  plot               String?
   ratings            Rating[]
   createdDate        DateTime @db.Date
 }

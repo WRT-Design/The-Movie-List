@@ -223,26 +223,29 @@ exports.utils = {
     }
 
     console.log(avgs);
+    let oAvg = (
+      avgs.reduce((acc, cur) => {
+        return acc + cur;
+      }, 0) / avgs.length
+    ).toFixed(2);
+    oAvg = parseFloat(oAvg);
 
     let data = {
-      avg_overall: (
-        avgs.reduce((acc, cur) => {
-          return acc + cur;
-        }, 0) / avgs.length
-      ).toFixed(2),
-      avg_acting: avgs[0].toFixed(2),
-      avg_attraction: avgs[1].toFixed(2),
-      avg_cinemetography: avgs[2].toFixed(2),
-      avg_dialogue: avgs[3].toFixed(2),
-      avg_directing: avgs[4].toFixed(2),
-      avg_editing: avgs[5].toFixed(2),
-      avg_plot: avgs[6].toFixed(2),
-      avg_soundtrack: avgs[7].toFixed(2),
-      avg_specialEffects: avgs[8].toFixed(2),
-      avg_theme: avgs[9].toFixed(2),
+      avg_overall: oAvg,
+      avg_acting: parseFloat(avgs[0].toFixed(2)),
+      avg_attraction: parseFloat(avgs[1].toFixed(2)),
+      avg_cinemetography: parseFloat(avgs[2].toFixed(2)),
+      avg_dialogue: parseFloat(avgs[3].toFixed(2)),
+      avg_directing: parseFloat(avgs[4].toFixed(2)),
+      avg_editing: parseFloat(avgs[5].toFixed(2)),
+      avg_plot: parseFloat(avgs[6].toFixed(2)),
+      avg_soundtrack: parseFloat(avgs[7].toFixed(2)),
+      avg_specialEffects: parseFloat(avgs[8].toFixed(2)),
+      avg_theme: parseFloat(avgs[9].toFixed(2)),
     };
 
     // returns an object of ratings to update
     console.log("movie averages data: ", data);
+    return data;
   },
 };

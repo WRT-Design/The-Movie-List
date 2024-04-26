@@ -1,6 +1,9 @@
 <script setup>
 import NavC from "../components/NavC.vue";
 import MLTable from "../components/MovieListTable.vue";
+import StarRatings from "@/components/StarRatings.vue";
+
+import Tag from 'primevue/tag';
 
 import { ref } from "vue";
 </script>
@@ -12,13 +15,18 @@ import { ref } from "vue";
       <section>
         <div class="container">
           <div class="row">
-            <div class="col-md-12 d-flex p-2">
+            <div class="flex p-2">
               <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
-                width="25%" height="auto" />
-              <img v-else src="@/assets/no-poster.png" width="25%" height="auto" class="p-2" />
-              <section class="px-2">
+                width="15%" height="auto" />
+              <img v-else src="@/assets/no-poster.png" width="15%" height="auto" class="p-2" />
+              <section class="flex flex-column gap-2 px-2">
                 <h2>{{ movie.titleText.text }}</h2>
-                <h2>3.7 stars</h2>
+                <h2 class="flex" v-if="dbMovie && dbMovie.avg_overall">{{ dbMovie.avg_overall }} stars
+                  <StarRatings :star="dbMovie.avg_overall" />
+                </h2>
+                <h2 class="flex" v-else>0 stars (No Ratings Yet)
+                  <StarRatings class="mx-2" :star="0" />
+                </h2>
                 <section>
                   <b>Release Date: </b>
                   <span v-if="movie.releaseDate &&
@@ -34,8 +42,8 @@ import { ref } from "vue";
                 </section>
                 <section>
                   <b>Genres: </b>
-                  <span v-if="movie.genres" v-for="m of movie.genres.genres">{{ m.text }},
-                  </span>
+                  <Tag v-if="movie.genres" v-for="m of movie.genres.genres" :value="m.text" severity="secondary"
+                    class="mx-1"></Tag>
                   <span v-else>None</span>
                 </section>
                 <section>

@@ -1,10 +1,6 @@
 const User = require("../models/user.model.js");
 const util = require("./controller.util.js");
 
-// const { PrismaClient } = require("@prisma/client");
-
-// const prisma = new PrismaClient();
-
 exports.createOne = async (req, res) => {
   const user = req.body.user;
   console.log(user);

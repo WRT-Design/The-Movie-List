@@ -68,7 +68,7 @@ defineProps({
           &copy; 2024 William Thackeray
         </template>
       </Menubar>
-      <Menubar v-if="auth" :model="authItems" class="flex flex-column h-full">
+      <Menubar v-if="auth" :model="authItems" class="flex flex-column h-full" style="width:180px;">
         <template #start>
           <RouterLink to="/" class="navbar-brand">
             <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
@@ -284,6 +284,7 @@ export default {
       personalScore: ref(0),
       review: "",
       movieId: "",
+      selectedMovie: {}
     };
   },
   methods: {
@@ -325,7 +326,7 @@ export default {
         const body = {
           user: user.id,
           movie: movieTitle,
-          movieId: this.movieId,
+          movieId: this.selectedMovie.id,
           ratings: {
             acting: this.ratings.acting,
             attraction: this.ratings.attraction,
@@ -340,6 +341,7 @@ export default {
           },
           personalScore: this.personalScore,
           review: this.review,
+          movieInfo: this.selectedMovie
         };
 
         await fetch(`/api/api/rating?type=complex`, {
@@ -356,10 +358,11 @@ export default {
         const body = {
           user: user.id,
           movie: movieTitle,
-          movieId: this.movieId,
+          movieId: this.selectedMovie.id,
           rating: this.movieStars,
           personalScore: this.movieStars,
           review: this.review,
+          movieInfo: this.selectedMovie
         };
 
         await fetch(`/api/api/rating?type=simple`, {
@@ -430,11 +433,12 @@ export default {
       console.log("cancel post");
       this.postContent = "";
     },
-    select(id) {
+    select(m) {
       console.log("select");
-      this.movieId = id;
-      console.log(document.querySelector("#post-btn"));
-      document.querySelector("#post-btn").disabled = false;
+      this.selectedMovie = m;
+      console.log('this.selectedMovie', this.selectedMovie);
+      // console.log(document.querySelector("#post-btn"));
+      // document.querySelector("#post-btn").disabled = false;
     },
     deselect() {
       console.log("deselect");
