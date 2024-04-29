@@ -44,7 +44,7 @@ app.use(
     domain: "dev-bstn5pi0f5twfr3y.us.auth0.com",
     clientId: "ubKRwTLiCw3CnVDB3Bdp22LYVdlocBfC",
     authorizationParams: {
-      redirect_uri: `http://localhost:5173/`,
+      redirect_uri: `/api/`,
     },
   })
 );
