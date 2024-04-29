@@ -11,11 +11,9 @@ import Button from 'primevue/button';
 
 import { ref, reactive, onMounted } from "vue";
 
-import { useAuthStore } from '@/stores/AuthStore'
+import { useAuthStore } from '@/stores/auth-store'
 
 const store = useAuthStore()
-
-console.log(store.user)
 
 defineEmits(["post", "rating"]);
 defineProps({
@@ -25,64 +23,39 @@ defineProps({
   },
 })
 
-
-// const { loginWithRedirect, user, isAuthenticated } = useAuth0();
-
-// const state = reactive({
-//   modal_rating: null,
-//   modal_post: null,
-// });
-
-// onMounted(() => {
-//   state.modal_rating = new Modal("#modal_rating", {});
-//   state.modal_post = new Modal("#modal_post", {});
-// });
-
-// function openModal(type) {
-//   if (type == "r") state.modal_rating.show();
-//   else if (type == "p") state.modal_post.show();
-// }
-
-// function closeModal(type) {
-//   if (type == "r") state.modal_rating.hide();
-//   else if (type == "p") state.modal_post.hide();
-// }
 </script>
 
 <template>
 
-  <div class="">
-
-    <div class="h-full flex-shrink-0 absolute left-0 top-0 w-2 z-1" style="width:180px;">
-      <Menubar v-if="!auth" :model="unAuthItems" class="flex flex-column h-full" style="width:180px;">
-        <template #start>
-          <RouterLink to="/" class="navbar-brand">
-            <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
-          </RouterLink>
-        </template>
-        <template #end>
-          <section class="logInOut py-5">
-            <LoginC v-if="!auth" @login="login($event)" />
-            <LogoutC v-if="auth" />
-          </section>
-          &copy; 2024 William Thackeray
-        </template>
-      </Menubar>
-      <Menubar v-if="auth" :model="authItems" class="flex flex-column h-full" style="width:180px;">
-        <template #start>
-          <RouterLink to="/" class="navbar-brand">
-            <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
-          </RouterLink>
-        </template>
-        <template #end>
-          <section class="logInOut py-5">
-            <LoginC v-if="!auth" @login="login($event)" />
-            <LogoutC v-if="auth" />
-          </section>
-          &copy; 2024 William Thackeray
-        </template>
-      </Menubar>
-    </div>
+  <div class="h-full flex-shrink-0 absolute left-0 top-0 z-1" style="width:180px;">
+    <Menubar v-if="!auth" :model="unAuthItems" class="flex flex-column h-full fixed" style="width:180px;">
+      <template #start>
+        <RouterLink to="/" class="navbar-brand">
+          <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
+        </RouterLink>
+      </template>
+      <template #end>
+        <section class="logInOut py-5">
+          <LoginC v-if="!auth" @login="login($event)" />
+          <LogoutC v-if="auth" />
+        </section>
+        &copy; 2024 William Thackeray
+      </template>
+    </Menubar>
+    <Menubar v-if="auth" :model="authItems" class="flex flex-column h-full fixed" style="width:180px;">
+      <template #start>
+        <RouterLink to="/" class="navbar-brand">
+          <img alt="The Movie List logo" src="@/assets/TML_white_1.svg" width="125" height="125" />
+        </RouterLink>
+      </template>
+      <template #end>
+        <section class="logInOut py-5">
+          <LoginC v-if="!auth" @login="login($event)" />
+          <LogoutC v-if="auth" @click="store.clear()" />
+        </section>
+        &copy; 2024 William Thackeray
+      </template>
+    </Menubar>
   </div>
 
   <!-- <footer>
@@ -109,62 +82,59 @@ defineProps({
             <input type="range" class="w-full" min="1.0" max="5.0" step="0.5" id="rating" v-model="movieStars" />
           </div>
           <!-- COMPLEX RATING SECTION -->
-          <div v-if="!simple" class="form-group">
-            <div>
-              <StarRatings :star="average" />
-              <label class="d-flex justify-content-between" for="acting">
-                <span>Acting: {{ ratings.acting }}</span>
-
-              </label>
+          <div v-if="!simple" class="flex flex-column justify-content-between form-group">
+            <StarRatings :star="average" />
+            <div class="flex justify-content-around">
+              <label class="d-flex justify-content-between pr-3" for="acting"> Acting: {{ ratings.acting }}</label>
               <input id="acting" class="form-range" name="acting" type="range" max=5 min=1 step=.1
                 v-model="ratings.acting" />
             </div>
-            <div>
-              <label for="attraction">Attraction: {{ ratings.attraction }}</label>
+            <div class="flex justify-content-around">
+              <label for="attraction" class="pr-3">Attraction: {{ ratings.attraction }}</label>
               <input id="attraction" class="form-range" name="attraction" type="range" max=5 min=1 step=.1
                 v-model="ratings.attraction" />
             </div>
-            <div>
-              <label for="cinemetography">Cinemetography: {{ ratings.cinemetography }}</label>
+            <div class="flex justify-content-around">
+              <label for="cinemetography" class="pr-3">Cinemetography: {{ ratings.cinemetography }}</label>
               <input id="cinemetography" class="form-range" name="cinemetography" type="range" max="5" min="" step=".1"
                 v-model="ratings.cinemetography" />
             </div>
-            <div>
-              <label for="dialogue">Dialogue: {{ ratings.dialogue }}</label><input id="dialogue" class="form-range"
-                name="dialogue" type="range" max="5" min="" step=".1" v-model="ratings.dialogue" />
+            <div class="flex justify-content-around">
+              <label for="dialogue" class="pr-3">Dialogue: {{ ratings.dialogue }}</label><input id="dialogue"
+                class="form-range" name="dialogue" type="range" max="5" min="" step=".1" v-model="ratings.dialogue" />
             </div>
-            <div>
-              <label for="directing">Directing: {{ ratings.directing }}</label><input id="directing" class="form-range"
-                name="directing" type="range" max="5" min="" step=".1" v-model="ratings.directing" />
+            <div class="flex justify-content-around">
+              <label for="directing" class="pr-3">Directing: {{ ratings.directing }}</label><input id="directing"
+                class="form-range" name="directing" type="range" max="5" min="" step=".1" v-model="ratings.directing" />
             </div>
 
-            <div>
-              <label for="editing">Editing: {{ ratings.editing }}</label>
+            <div class="flex justify-content-around">
+              <label for="editing" class="pr-3">Editing: {{ ratings.editing }}</label>
               <input id="editing" class="form-range" name="editing" type="range" max="5" min="" step=".1"
                 v-model="ratings.editing" />
             </div>
-            <div>
-              <label for="plot">Plot: {{ ratings.plot }}</label>
+            <div class="flex justify-content-around">
+              <label for="plot" class="pr-3">Plot: {{ ratings.plot }}</label>
               <input id="plot" class="form-range" name="plot" type="range" max="5" min="" step=".1"
                 v-model="ratings.plot" />
             </div>
-            <div>
-              <label for="soundtrack">Soundtrack: {{ ratings.soundtrack }}</label>
+            <div class="flex justify-content-around">
+              <label for="soundtrack" class="pr-3">Soundtrack: {{ ratings.soundtrack }}</label>
               <input id="soundtrack" class="form-range" name="soundtrack" type="range" max="5" min="" step=".1"
                 v-model="ratings.soundtrack" />
             </div>
-            <div>
-              <label for="specialEffects">Special Effects: {{ ratings.specialEffects }}</label>
+            <div class="flex justify-content-around">
+              <label for="specialEffects" class="pr-3">Special Effects: {{ ratings.specialEffects }}</label>
               <input id="specialEffects" class="form-range" name="specialEffects" type="range" max="5" min="" step=".1"
                 v-model="ratings.specialEffects" />
             </div>
-            <div>
-              <label for="theme">Theme: {{ ratings.theme }}</label>
+            <div class="flex justify-content-around">
+              <label for="theme" class="pr-3">Theme: {{ ratings.theme }}</label>
               <input id="theme" class="form-range" name="theme" type="range" max="5" min="" step=".1"
                 v-model="ratings.theme" />
             </div>
-            <div id="psLabel">
-              <label for="personalScore">Personal Score: {{ personalScore }}</label>
+            <div id="psLabel" class="flex justify-content-around">
+              <label for="personalScore" class="pr-3">Personal Score: {{ personalScore }}</label>
               <input id="personalScore" class="form-range" name="personalScore" type="range" max="5" min="" step=".1"
                 v-model="personalScore" />
             </div>
@@ -228,7 +198,7 @@ export default {
           label: "Profile",
           icon: 'pi pi-user',
           command: () => {
-            this.$router.push(`/profile/thack.whack`)
+            this.$router.push(`/profile/${this.$props.user.nickname}`)
           }
         },
         {
@@ -375,10 +345,11 @@ export default {
 
         this.$emit("rating");
       }
+
+      // reset values
+      this.cancelRating()
     },
     cancelRating() {
-      console.log("cancel rating");
-      // set rating content inputs to ''
       this.acting = 0.0;
       this.attraction = 0.0;
       this.cinemetography = 0.0;
@@ -469,6 +440,12 @@ export default {
 </script>
 
 <style scoped>
+.p-menuitem-link span,
+.p-button span,
+.p-column-header-content span {
+  margin: 3px;
+}
+
 .navWrapper {
   min-height: 100vh;
   position: fixed;
@@ -567,3 +544,4 @@ footer {
   color: white;
 }
 </style>
+@/stores/auth-store

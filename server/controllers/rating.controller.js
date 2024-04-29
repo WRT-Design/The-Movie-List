@@ -46,11 +46,12 @@ exports.createOne = async (req, res) => {
       genres: genres,
       year: body.movieInfo.year,
       plot: body.movieInfo.plot,
+      runtime: body.movieInfo.runtime,
       createdDate: new Date(),
     };
 
-    movie = await Movie.create({ movieBody });
-    movieId = movie.movie.id;
+    movie = await Movie.create(movieBody);
+    movieId = movie.id;
   } else {
     // movie found
     console.log("movie found, we will get the id");
@@ -91,7 +92,7 @@ exports.createOne = async (req, res) => {
       createdDate: new Date(),
     };
     console.log("ratings data: ", data);
-    let ratingResult = await Rating.create({ data });
+    let ratingResult = await Rating.create(data);
     console.log("new rating: ", ratingResult);
   }
   if (type == "simple") {
@@ -120,7 +121,7 @@ exports.createOne = async (req, res) => {
       createdDate: new Date(),
     };
     console.log("ratings data: ", data);
-    let ratingResult = await Rating.create({ data });
+    let ratingResult = await Rating.create(data);
     console.log("new rating: ", ratingResult);
   }
 

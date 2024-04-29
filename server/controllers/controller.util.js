@@ -47,10 +47,8 @@ exports.utils = {
     let count = 0;
     for (let val of values) {
       val = parseInt(val);
-      if (val != 0) {
-        sum += val;
-        count++;
-      }
+      sum += val;
+      count++;
     }
     let average = sum / count;
     return average;
@@ -170,56 +168,27 @@ exports.utils = {
 
     // loop through values and get totals
     for (let val of values) {
-      if (val.acting != 0) {
-        zeroCount.zActing++;
-        sums.sumActing += val.acting;
-      }
-      if (val.attraction != 0) {
-        zeroCount.zAttraction++;
-        sums.sumAttraction += val.attraction;
-      }
-      if (val.cinemetography != 0) {
-        zeroCount.zCinemetography++;
-        sums.sumCinemetography += val.cinemetography;
-      }
-      if (val.dialogue != 0) {
-        zeroCount.zDialogue++;
-        sums.sumDialogue += val.dialogue;
-      }
-      if (val.directing != 0) {
-        zeroCount.zDirecting++;
-        sums.sumDirecting += val.directing;
-      }
-      if (val.editing != 0) {
-        zeroCount.zEditing++;
-        sums.sumEditing += val.editing;
-      }
-      if (val.plot != 0) {
-        zeroCount.zPlot++;
-        sums.sumPlot += val.plot;
-      }
-      if (val.soundtrack != 0) {
-        zeroCount.zSoundtrack++;
-        sums.sumSoundtrack += val.soundtrack;
-      }
-      if (val.specialEffects != 0) {
-        zeroCount.zSpecialEffects++;
-        sums.sumSpecialEffects += val.specialEffects;
-      }
-      if (val.theme != 0) {
-        zeroCount.zTheme++;
-        sums.sumTheme += val.theme;
-      }
+      sums.sumActing += val.acting;
+      sums.sumAttraction += val.attraction;
+      sums.sumCinemetography += val.cinemetography;
+      sums.sumDialogue += val.dialogue;
+      sums.sumDirecting += val.directing;
+      sums.sumEditing += val.editing;
+      sums.sumPlot += val.plot;
+      sums.sumSoundtrack += val.soundtrack;
+      sums.sumSpecialEffects += val.specialEffects;
+      sums.sumTheme += val.theme;
     }
 
     // average all those averages
     let averages = Object.values(sums);
-    let zeros = Object.values(zeroCount);
+    console.log("averages", averages);
+    console.log("averages length", values.length);
 
     let avgs = [];
 
-    for (let i = 0; i < averages.length; i++) {
-      avgs.push(averages[i] / zeros[i]);
+    for (let a of averages) {
+      avgs.push(a / values.length);
     }
 
     console.log(avgs);

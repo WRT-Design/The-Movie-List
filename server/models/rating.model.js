@@ -9,14 +9,14 @@ const Rating = function (rating) {
 Rating.create = async (newRating) => {
   try {
     console.log("newRating: ", newRating);
-    let rating = await prisma.rating.create(newRating);
+    let rating = await prisma.rating.create({ data: newRating });
     console.log("created rating");
     console.log(rating);
 
     // connect the rating
     const connectRes = await prisma.user.update({
       where: {
-        id: newRating.data.userId,
+        id: rating.userId,
       },
       data: {
         ratings: {

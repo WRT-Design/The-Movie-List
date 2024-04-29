@@ -5,8 +5,10 @@ defineProps(['star'])
 </script>
 
 <template>
-  <div>
-    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
+  <div class="min-w-max">
+    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="star >= 1" />
+    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="star >= 0.5" />
+    <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
 
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="star >= 2" />
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="star >= 1.5" />
@@ -23,6 +25,5 @@ defineProps(['star'])
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="star >= 5" />
     <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="star >= 4.5" />
     <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
   </div>
 </template>

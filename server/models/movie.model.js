@@ -9,7 +9,7 @@ const Movie = function (movie) {
 Movie.create = async (newMovie) => {
   try {
     console.log("newMovie: ", newMovie);
-    let movie = await prisma.movie.create(newMovie);
+    let movie = await prisma.movie.create({ data: newMovie });
     console.log("created movie");
     return movie;
   } catch (err) {

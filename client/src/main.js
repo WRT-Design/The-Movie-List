@@ -9,7 +9,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 // import { Auth0Plugin } from "./auth0-plugin";
-import { useAuthStore } from "@/stores/AuthStore";
+import { useAuthStore } from "@/stores/auth-store";
 
 import "/node_modules/primeflex/primeflex.css";
 
@@ -26,7 +26,11 @@ app.use(pinia);
 
 app.use(PrimeVue);
 import Button from "primevue/button";
+import Tooltip from "primevue/tooltip";
+
+app.directive("tooltip", Tooltip);
 app.component("Button", Button);
+// app.component("Tooltip", Tooltip);
 const authStore = useAuthStore();
 
 app.use(router);

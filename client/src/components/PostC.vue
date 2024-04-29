@@ -1,35 +1,33 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+import Card from 'primevue/card';
+import Button from 'primevue/button';
+
 defineProps(["content", "postId", "picURL", "name", "username", "date"]);
 </script>
 
 <template>
-  <li :id="postId" class="card" data-bs-theme="dark">
-    <section class="card-header d-flex align-items-center">
-      <img v-if="picURL" :src="picURL" alt="avatar" width="40px" height="40px" />
-      <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="40px" height="40px" />
-      <span id="name">{{ name }}</span>
-      <span id="username">@{{ username }}</span>
-      <span id="date"><small>{{ date }}</small></span>
-    </section>
-    <section class="card-body">
+  <Card :id="postId">
+    <template #title>
+      <div class="flex align-content-center">
+        <img v-if="picURL" :src="picURL" alt="avatar" width="40px" height="40px" />
+        <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="40px" height="40px" />
+        <span class="pl-2">{{ name }}</span>
+        <span class="text-color-secondary pl-2">@{{ username }}</span>
+        <span class="text-color-secondary pl-2"><small>{{ date }}</small></span>
+      </div>
+    </template>
+    <template #content>
       {{ content }}
-    </section>
-    <section class="card-footer">
-      <button type="button" id="delBtnPost" @click="deletePost($event, postId)">
-        <FontAwesomeIcon icon="fa-regular fa-trash-can" />
-      </button>
-
-      <button type="button" id="starBtn">
-        <!-- <FontAwesomeIcon icon="fa-solid fa-heart" id="starIcon" /> -->
-        <FontAwesomeIcon icon="fa-regular fa-heart" />
-      </button>
-      <button type="button" id="commentBtn">
-        <FontAwesomeIcon icon="fa-regular fa-message" />
-      </button>
-    </section>
-  </li>
+    </template>
+    <template #footer>
+      <Button class="mr-2 text-xs p-2" label="Star" icon="pi pi-star" severity="secondary" />
+      <Button class="mr-2 text-xs p-2" label="Comment" icon="pi pi-comment" severity="secondary" />
+      <Button class="mr-2 text-xs p-2" label="Delete" icon="pi pi-trash" severity="secondary"
+        @click="deletePost($event, postId)" />
+    </template>
+  </Card>
 </template>
 
 <script>
@@ -59,7 +57,7 @@ export default {
 </script>
 
 <style>
-button {
+/* button {
   border: none;
   outline: none;
   background: none;
@@ -87,5 +85,5 @@ button {
 
 #starIcon {
   color: var(--tml-orange);
-}
+} */
 </style>

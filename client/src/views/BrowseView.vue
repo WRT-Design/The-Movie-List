@@ -1,26 +1,16 @@
 <script setup>
 import NavC from "../components/NavC.vue";
 import BrowseMovieSearch from "@/components/BrowseMovieSearch.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import StarRatings from "@/components/StarRatings.vue";
 
-import { Modal } from "bootstrap";
+import Dialog from 'primevue/dialog';
+
 import { ref, reactive, onMounted } from "vue";
 
-const state = reactive({
-  specific_modal_rating: null,
-});
+import { useAuthStore } from '@/stores/auth-store'
 
-onMounted(() => {
-  state.specific_modal_rating = new Modal("#specific_modal_rating", {});
-});
+const store = useAuthStore()
 
-function openModal(type) {
-  if (type == "sr") state.specific_modal_rating.show();
-}
-
-function closeModal(type) {
-  if (type == "sr") state.specific_modal_rating.hide();
-}
 </script>
 
 <template>
@@ -29,187 +19,144 @@ function closeModal(type) {
     <h1 class="text-center p-3 m-0">Explore</h1>
     <section>
       <BrowseMovieSearch class="m-3" @newRating="
-        newRating($event);
-      openModal('sr');
-      " />
+          newRating($event); visible = true
+          " :user="store.getUser" />
     </section>
   </div>
 
-  <!-- New Rating Specific Modal -->
-  <div class="modal fade text-light" id="specific_modal_rating" tabindex="-1" aria-labelledby="modal_demo_label"
-    aria-hidden="true" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal_demo_label">
-            <span v-if="movie">Rating for {{ movie.titleText.text }}</span>
-          </h5>
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal('sr')"></button>
-        </div>
-        <div v-if="movie" class="modal-body">
-          <section class="d-flex justify-content-around">
-            <p class="active ratingNav" @click="toggle">Simple Rating</p>
-            <p class="ratingNav" @click="toggle">Complex Rating</p>
-          </section>
-          <section>
-            <div v-if="simple" class="form-group">
-              <div class="d-flex justify-content-between">
-                <span for="rating">Rating: {{ movieStars }} Stars</span>
-                <span>
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 2" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 1.5" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 3" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 2.5" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 4" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 3.5" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="movieStars >= 5" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="movieStars >= 4.5" />
-                  <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-                </span>
-              </div>
-              <input type="range" class="form-range" min="1.0" max="5.0" step="0.5" id="rating"
-                v-model="movieStars"></input>
+  <!-- Rating Dialog -->
+  <Dialog v-model:visible="visible" modal :header="'New Rating for ' + movieTitle" :style="{ width: '25rem' }">
+    <div class="gap-3 mb-3">
+      <div class="flex flex-column">
+        <section class="flex justify-content-between">
+          <p class="active ratingNav p-2" @click="toggle">Simple Rating</p>
+          <p class="ratingNav p-2" @click="toggle">Complex Rating</p>
+        </section>
+        <section>
+          <!-- SIMPLE RATING SECTION -->
+          <div v-if="simple" class="form-group">
+            <div class="flex flex-row justify-content-between">
+              <div for="rating">Rating: {{ movieStars }} Stars </div>
+              <StarRatings :star="movieStars" />
             </div>
-            <div v-if="!simple" class="form-group">
-              <div>
-                <label class="d-flex justify-content-between" for="acting">
-                  <span>Acting: {{ ratings.acting }}</span>
-                  <span>
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" /> <!-- Base case is 1 star-->
-
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="average >= 2" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="average >= 1.5" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="average >= 3" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="average >= 2.5" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="average >= 4" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="average >= 3.5" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star" v-if="average >= 5" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-bold fa-star-half-stroke" v-else-if="average >= 4.5" />
-                    <FontAwesomeIcon class="starIcon" icon="fa-regular fa-star" v-else />
-
-                  </span>
-                </label>
-                <input id="acting" class="form-range" name="acting" type="range" max="5" min="1" step=".1"
-                  v-model="ratings.acting" />
-              </div>
-              <div>
-                <label for="attraction">Attraction: {{ ratings.attraction }}</label>
-                <input id="attraction" class="form-range" name="attraction" type="range" max="5" min="" step=".1"
-                  v-model="ratings.attraction" />
-              </div>
-              <div>
-                <label for="cinemetography">Cinemetography: {{ ratings.cinemetography }}</label>
-                <input id="cinemetography" class="form-range" name="cinemetography" type="range" max="5" min=""
-                  step=".1" v-model="ratings.cinemetography" />
-              </div>
-              <div>
-                <label for="dialogue">Dialogue: {{ ratings.dialogue }}</label><input id="dialogue" class="form-range"
-                  name="dialogue" type="range" max="5" min="" step=".1" v-model="ratings.dialogue" />
-              </div>
-              <div>
-                <label for="directing">Directing: {{ ratings.directing }}</label><input id="directing"
-                  class="form-range" name="directing" type="range" max="5" min="" step=".1"
-                  v-model="ratings.directing" />
-              </div>
-
-              <div>
-                <label for="editing">Editing: {{ ratings.editing }}</label>
-                <input id="editing" class="form-range" name="editing" type="range" max="5" min="" step=".1"
-                  v-model="ratings.editing" />
-              </div>
-              <div>
-                <label for="plot">Plot: {{ ratings.plot }}</label>
-                <input id="plot" class="form-range" name="plot" type="range" max="5" min="" step=".1"
-                  v-model="ratings.plot" />
-              </div>
-              <div>
-                <label for="soundtrack">Soundtrack: {{ ratings.soundtrack }}</label>
-                <input id="soundtrack" class="form-range" name="soundtrack" type="range" max="5" min="" step=".1"
-                  v-model="ratings.soundtrack" />
-              </div>
-              <div>
-                <label for="specialEffects">Special Effects: {{ ratings.specialEffects }}</label>
-                <input id="specialEffects" class="form-range" name="specialEffects" type="range" max="5" min=""
-                  step=".1" v-model="ratings.specialEffects" />
-              </div>
-              <div>
-                <label for="theme">Theme: {{ ratings.theme }}</label>
-                <input id="theme" class="form-range" name="theme" type="range" max="5" min="" step=".1"
-                  v-model="ratings.theme" />
-              </div>
-              <div id="psLabel">
-                <label for="personalScore">Personal Score: {{ personalScore }}</label>
-                <input id="personalScore" class="form-range" name="personalScore" type="range" max="5" min="" step=".1"
-                  v-model="personalScore" />
-              </div>
+            <input type="range" class="w-full" min="0.0" max="5.0" step="0.5" id="rating" v-model="movieStars" />
+          </div>
+          <!-- COMPLEX RATING SECTION -->
+          <div v-if="!simple" class="flex flex-column justify-content-between form-group">
+            <StarRatings :star="average" />
+            <div class="flex justify-content-around">
+              <label class="d-flex justify-content-between pr-3" for="acting"> Acting: {{ ratings.acting }}</label>
+              <input id="acting" class="form-range" name="acting" type="range" max=5 min=0 step=.1
+                v-model="ratings.acting" @input="averageRatings" />
             </div>
-            <div class="form-group">
-              <label for="comment">
-                <h3>Your Review</h3>
-              </label>
-              <textarea class="form-control" id="comment" v-model="movie.comment"
-                placeholder="Write your review..."></textarea>
+            <div class="flex justify-content-around">
+              <label for="attraction" class="pr-3">Attraction: {{ ratings.attraction }}</label>
+              <input id="attraction" class="form-range" name="attraction" type="range" max=5 min=0 step=.1
+                v-model="ratings.attraction" @input="averageRatings" />
             </div>
-          </section>
-          <!-- fill out the rest of the modal information needed -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeModal('sr')">
-            Cancel
-          </button>
-          <button type="button" class="btn btn-primary" @click="closeModal('sr'); postRating()">
-            Post
-          </button>
-        </div>
+            <div class="flex justify-content-around">
+              <label for="cinemetography" class="pr-3">Cinemetography: {{ ratings.cinemetography }}</label>
+              <input id="cinemetography" class="form-range" name="cinemetography" type="range" max="5" min="" step=".1"
+                v-model="ratings.cinemetography" @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="dialogue" class="pr-3">Dialogue: {{ ratings.dialogue }}</label><input id="dialogue"
+                class="form-range" name="dialogue" type="range" max="5" min="" step=".1" v-model="ratings.dialogue"
+                @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="directing" class="pr-3">Directing: {{ ratings.directing }}</label><input id="directing"
+                class="form-range" name="directing" type="range" max="5" min="" step=".1" v-model="ratings.directing"
+                @input="averageRatings" />
+            </div>
+
+            <div class="flex justify-content-around">
+              <label for="editing" class="pr-3">Editing: {{ ratings.editing }}</label>
+              <input id="editing" class="form-range" name="editing" type="range" max="5" min="" step=".1"
+                v-model="ratings.editing" @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="plot" class="pr-3">Plot: {{ ratings.plot }}</label>
+              <input id="plot" class="form-range" name="plot" type="range" max="5" min="" step=".1"
+                v-model="ratings.plot" @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="soundtrack" class="pr-3">Soundtrack: {{ ratings.soundtrack }}</label>
+              <input id="soundtrack" class="form-range" name="soundtrack" type="range" max="5" min="" step=".1"
+                v-model="ratings.soundtrack" @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="specialEffects" class="pr-3">Special Effects: {{ ratings.specialEffects }}</label>
+              <input id="specialEffects" class="form-range" name="specialEffects" type="range" max="5" min="" step=".1"
+                v-model="ratings.specialEffects" @input="averageRatings" />
+            </div>
+            <div class="flex justify-content-around">
+              <label for="theme" class="pr-3">Theme: {{ ratings.theme }}</label>
+              <input id="theme" class="form-range" name="theme" type="range" max="5" min="" step=".1"
+                v-model="ratings.theme" @input="averageRatings" />
+            </div>
+            <div id="psLabel" class="flex justify-content-around">
+              <label for="personalScore" class="pr-3">Personal Score: {{ personalScore }}</label>
+              <input id="personalScore" class="form-range" name="personalScore" type="range" max="5" min="" step=".1"
+                v-model="personalScore" />
+            </div>
+          </div>
+        </section>
       </div>
     </div>
-  </div>
+    <div class="flex flex-column gap-3 mb-5">
+      <h3>Your Review</h3>
+      <textarea class="review" v-model="review" placeholder="Write your review..."></textarea>
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <Button type="button" label="Cancel" severity="secondary" @click="visible = false">Cancel</Button>
+      <Button type="button" label="Save" @click="visible = false; postRating();">Save</Button>
+    </div>
+  </Dialog>
+
+
 </template>
 
 <script>
-import { Modal } from "bootstrap";
 import { ref, reactive, onMounted } from "vue";
 
 export default {
   data() {
     return {
       movie: ref(""),
+      movieTitle: ref(""),
       movieStars: ref(0),
       simple: ref(true),
       ratings: {
-        acting: ref(3.5),
-        attraction: ref(3.5),
-        cinemetography: ref(3.5),
-        dialogue: ref(3.5),
-        directing: ref(3.5),
-        editing: ref(3.5),
-        plot: ref(3.5),
-        soundtrack: ref(3.5),
-        specialEffects: ref(3.5),
-        theme: ref(3.5),
+        acting: ref(2.5),
+        attraction: ref(2.5),
+        cinemetography: ref(2.5),
+        dialogue: ref(2.5),
+        directing: ref(2.5),
+        editing: ref(2.5),
+        plot: ref(2.5),
+        soundtrack: ref(2.5),
+        specialEffects: ref(2.5),
+        theme: ref(2.5),
       },
-      average: ref(),
-      personalScore: ref(3.5),
+      average: ref(0),
+      personalScore: ref(2.5),
+      visible: ref(false),
     };
   },
   methods: {
     newRating(movie) {
       this.movie = movie;
+      this.movieTitle = movie.titleText.text
       console.log("emit: new rating || movie: ", movie);
-      // this.openModal("sr");
+    },
+    averageRatings() {
+      let vals = Object.values(this.ratings)
+      let tot = 0
+      for (let v of vals) {
+        tot += parseFloat(v)
+      }
+      this.average = tot / vals.length
     },
     async postRating() {
       console.log('post rating')
@@ -264,7 +211,7 @@ export default {
 <style>
 .active {
   font-weight: 700;
-  color: var(--tml-orange);
+  color: var(--primary-color);
 }
 
 .ratingNav {

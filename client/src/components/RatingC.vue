@@ -29,11 +29,7 @@ defineProps(["rating", "picURL", "name", "username"]);
     <td>{{ rating.review }}</td>
   </section>
   <section class="ratingFooter">
-    <button
-      type="button"
-      id="delBtnRating"
-      @click="deleteRating($event, rating.id, rating.movieId)"
-    >
+    <button type="button" id="delBtnRating" @click="deleteRating($event, rating.id, rating.movieId)">
       <FontAwesomeIcon icon="fa-regular fa-trash-can" />
     </button>
 
@@ -73,7 +69,7 @@ export default {
 </script>
 
 <style>
-button {
+/* button {
   border: none;
   outline: none;
   background: none;
@@ -101,5 +97,5 @@ button {
 
 #starIcon {
   color: var(--tml-orange);
-}
+} */
 </style>

@@ -5,25 +5,16 @@ import Rating from "../components/RatingC.vue";
 import RatingTable from "../components/RatingTable.vue";
 import PostTable from "../components/PostTable.vue";
 
-import { Modal } from "bootstrap";
+import Dialog from 'primevue/dialog';
+import Textarea from 'primevue/textarea';
+import TabMenu from 'primevue/tabmenu';
+
 import { reactive, onMounted } from "vue";
 import { ref } from "vue";
 
-const state = reactive({
-  modal_edit_profile: null,
-});
+import { useAuthStore } from '@/stores/auth-store'
 
-onMounted(() => {
-  state.modal_edit_profile = new Modal("#modal_edit_profile", {});
-});
-
-function openModal(type) {
-  if (type == "ep") state.modal_edit_profile.show();
-}
-
-function closeModal(type) {
-  if (type == "ep") state.modal_edit_profile.hide();
-}
+const store = useAuthStore()
 
 defineProps(['authUsername'])
 </script>
@@ -32,7 +23,7 @@ defineProps(['authUsername'])
   <NavC @post="newPost" @rating="newRating" />
   <div class="profile">
     <div class="p-2">
-      <section class="d-flex p-2">
+      <section class="flex p-2">
         <img v-if="dbUser.picture" :src="dbUser.picture" alt="avatar" width="200px" height="200px" />
         <img v-else src="@/assets/annon_avatar.jpg" alt="avatar" width="200px" height="200px" />
         <section class="p-2">
@@ -41,75 +32,50 @@ defineProps(['authUsername'])
           <p>Bio: {{ bio }}</p>
         </section>
       </section>
-      <section class="d-flex justify-content-between">
+      <section class="flex justify-content-between">
         <div class="p-2">
           <a class="plain p-3 text-white">{{ followersCount }} Followers</a>
           <a class="plain text-white">{{ followingCount }} Following</a>
         </div>
-        <button v-if="auth && user.nickname != dbUser.username" type="button" class="btn btn-primary btn-light m-2"
-          @click="createFollow">Follow</button>
-        <!-- <button v-if="auth && user.nickname != dbUser.username && userFollows()" type="button"
-          class="btn btn-primary btn-light m-2" @click="createFollow">Unfollow</button> -->
+        <Button v-if="auth && !isFollowing(store.getUser)" type="button" class="btn btn-primary btn-light m-2"
+          @click="createFollow">Follow</Button>
+        <Button v-if="auth && isFollowing(store.getUser) && userFollows()" type="button"
+          class="btn btn-primary btn-light m-2" @click="deleteFollow">Unfollow</Button>
 
       </section>
       <section class="p-2">
-        <!-- Open a modal for profile editing -->
-        <button v-if="auth && user.nickname == dbUser.username" type="button" class="btn btn-primary btn-light mr-2"
-          @click="openModal('ep')">Edit Profile</button>
-        <button type="button" class="btn btn-primary btn-light mx-2" @click="shareLink">Share Profile</button>
+        <Button v-if="auth && user.nickname == dbUser.username" type="button" class="" @click="visible = true"
+          outlined>Edit
+          Profile</Button>
+        <Button class="btn btn-primary btn-light mx-2" @click="shareLink" outlined>Share Profile</Button>
       </section>
     </div>
 
     <div class="profile-view">
-      <button type="button" class="ml-btn active" @click="showSection('ml')">
-        Your Movie List
-      </button>
-      <button type="button" class="wl-btn" @click="showSection('wl')">
-        Your Watchlist
-      </button>
-      <button type="button" class="pl-btn" @click="showSection('pl')">
-        Your Posts
-      </button>
+      <TabMenu :model="pSections" />
     </div>
 
-    <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" class="d-flex" />
+    <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" class="flex w-full" />
 
     <div class="posts" v-if="sections.pl">
-      <ul>
-        <Post v-for="post in posts" v-bind:key="post.id" :content="post.content" :postId="post.id" :name="user.name"
-          :username="user.nickname" :date="dateFormat(post.createdDate)">
-        </Post>
-      </ul>
+      <Post v-for="post in posts" v-bind:key="post.id" :content="post.content" :postId="post.id" :name="user.name"
+        :username="user.nickname" :date="dateFormat(post.createdDate)" class="m-1 border-solid border-primary">
+      </Post>
     </div>
   </div>
 
-  <!-- Edit Profile Modal -->
-  <div class="modal fade" id="modal_edit_profile" tabindex="-1" aria-labelledby="modal_demo_label" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal_demo_label">Edit Profile</h5>
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal('ep')"></button>
-        </div>
-        <div class="modal-body d-flex flex-column">
-          <label class="m-2">Upload Profile Picture:
-            <input type="file" accept="image/png, image/jpeg" @change="checkFileSize" /></label>
-          <textarea v-model="bio" class="bio m-2" placeholder="Tell people a little about yourself."></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeModal('ep')">
-            Cancel
-          </button>
-          <button type="button" class="btn btn-primary" @click="
-    closeModal('ep');
-  saveProfile();
-  ">
-            Save
-          </button>
-        </div>
-      </div>
+  <!-- Edit Profile Dialog -->
+  <Dialog v-model:visible="visible" :position="'top'" modal header="Edit Profile" :style="{ width: '25rem' }">
+    <div class="flex flex-column align-items-center gap-3 mb-3">
+      <label for="bio">Change Your Bio</label>
+      <Textarea v-model="bio" name="bio" class="w-full" rows="5"
+        placeholder="Tell people a little about yourself."></Textarea>
     </div>
-  </div>
+    <div class="flex justify-content-end gap-2">
+      <Button label="Cancel" severity="secondary" icon="pi pi-times" @click="visible = false"></Button>
+      <Button label="Save" severity="primary" icon="pi pi-check" @click="visible = false; saveProfile()"></Button>
+    </div>
+  </Dialog>
 </template>
 
 <script>
@@ -132,6 +98,25 @@ export default {
       following: ref([]),
       followersCount: ref(0),
       followingCount: ref(0),
+      visible: ref(false),
+      following: ref(false),
+      pSections: ref([
+        {
+          label: 'Movie List', icon: 'pi pi-trophy', command: () => {
+            this.showSection('ml')
+          }
+        },
+        // {
+        //   label: 'Watch List', icon: 'pi pi-video', command: () => {
+        //     this.showSection('wl')
+        //   }
+        // },
+        {
+          label: 'Post List', icon: 'pi pi-thumbtack', command: () => {
+            this.showSection('pl')
+          }
+        },
+      ])
     };
   },
   async beforeMount() {
@@ -183,39 +168,36 @@ export default {
         this.following = result.follows;
         this.followingCount = this.following.length
       });
+
+    // get the ratings for the given user 
+
+    // get the posts for a given user 
+
   },
   methods: {
     authCheck() {
       console.log("user: ", this.user);
     },
+    isFollowing(user) {
+      console.log(this.followers.some(follow => follow.follower_id == user.id))
+      return this.followers.some(follow => follow.follower_id == user.id)
+    },
     showSection(sec) {
-      const mlBtn = document.querySelector(".ml-btn");
-      const wlBtn = document.querySelector(".wl-btn");
-      const plBtn = document.querySelector(".pl-btn");
       switch (sec) {
         case "ml":
           this.sections.ml = true;
           this.sections.wl = false;
           this.sections.pl = false;
-          mlBtn.classList.add("active");
-          wlBtn.classList.remove("active");
-          plBtn.classList.remove("active");
           break;
         case "wl":
           this.sections.ml = false;
           this.sections.wl = true;
           this.sections.pl = false;
-          mlBtn.classList.remove("active");
-          wlBtn.classList.add("active");
-          plBtn.classList.remove("active");
           break;
         case "pl":
           this.sections.ml = false;
           this.sections.wl = false;
           this.sections.pl = true;
-          mlBtn.classList.remove("active");
-          wlBtn.classList.remove("active");
-          plBtn.classList.add("active");
           break;
       }
     },
@@ -381,13 +363,48 @@ export default {
           return true;
         }
       }
+    },
+    async deleteFollow() {
+      const followerUsername = this.user.nickname; // user logged in
+      const followingId = this.dbUser.id; // profile you're viewing
+      let followerId
+
+      // get the logged in user infor from the database 
+      await fetch(`/api/api/user/${followerUsername}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result)
+          followerId = result.user.id;
+        })
+
+      await fetch(`/api/api/follows/${followerId}&${followingId}&one`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result);
+        });
     }
   }
 }
 </script>
 
-<style>
-table {
+<style scoped>
+.p-menuitem-link span,
+.p-button span,
+.p-column-header-content span {
+  margin: 3px;
+}
+
+/* table {
   border-collapse: collapse;
   width: 100%;
 }
@@ -494,5 +511,5 @@ tbody td {
 
 .plain {
   text-decoration: none;
-}
+} */
 </style>

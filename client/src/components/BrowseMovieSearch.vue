@@ -3,16 +3,16 @@ import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import Card from 'primevue/card';
-import FloatLabel from 'primevue/floatlabel';
 import InputText from 'primevue/inputtext';
-import IconField from 'primevue/iconfield';
-import InputIcon from 'primevue/inputicon';
+import Button from 'primevue/button';
 
 const controller = new AbortController();
 // eslint-disable-next-line no-unused-vars
 const signal = controller.signal;
 
 defineEmits(["newRating"]);
+defineProps(['user'])
+
 </script>
 
 <template>
@@ -30,8 +30,8 @@ defineEmits(["newRating"]);
         <template #content>
           <div class="flex">
             <img v-if="movie.primaryImage" :src="movie.primaryImage.url" :alt="movie.primaryImage.caption.plainText"
-              width="25%" height="25%" />
-            <img v-else src="@/assets/no-poster.png" width="25%" height="25%" />
+              width="15%" height="15%" />
+            <img v-else src="@/assets/no-poster.png" width="15%" height="15%" />
             <div class="px-2">
               <RouterLink class="link" :to="{ name: 'movie', params: { movieId: movie.id } }">
                 {{ movie.titleText.text }}
@@ -66,6 +66,7 @@ defineEmits(["newRating"]);
                   {{ movie.plot }}</span>
                 <span v-else>No Plot Available</span>
               </p>
+              <Button v-if="user.nickname" label="Rate" icon="pi pi-star" @click="newRating($event, movie.id)"></Button>
             </div>
           </div>
         </template>

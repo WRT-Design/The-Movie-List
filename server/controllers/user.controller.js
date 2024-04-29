@@ -66,7 +66,12 @@ exports.createOne = async (req, res) => {
 exports.findOne = async (req, res) => {
   const username = req.params.username;
   console.log("username param: ", username);
-  const user = await User.findBy("username", username);
+  let user;
+  if (req.query.id) {
+    user = await User.findBy("id", username);
+  } else {
+    user = await User.findBy("username", username);
+  }
   if (!user) {
     res.status(404).send({
       err: "Found no user by that username",

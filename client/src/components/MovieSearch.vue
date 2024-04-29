@@ -53,7 +53,7 @@ export default {
       await this.search();
     },
     async search() {
-      if (this.searchTerm.length > 2) {
+      if (this.searchTerm.length > 1) {
         const options = {
           method: "GET",
           headers: {
@@ -79,8 +79,9 @@ export default {
             image: movie.primaryImage,
             trailer: movie.trailer,
             genres: movie.genres,
-            year: movie.releaseYear.year,
-            plot: movie.plot ? movie.plot.plotText.plainText : null
+            year: movie.releaseYear && movie.releaseYear.year ? movie.releaseYear.year : null,
+            plot: movie.plot && movie.plot.plotText && movie.plot.plotText.plainText ? movie.plot.plotText.plainText : null,
+            runtime: movie.runtime && movie.runtime.seconds ? movie.runtime.seconds : null
           }));
         } catch (error) {
           console.error(error);

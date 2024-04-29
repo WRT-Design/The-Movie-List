@@ -1,13 +1,19 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth-store';
+
 import MovieTable from "../components/MovieTable.vue";
 import NavC from "../components/NavC.vue";
 
 import { ref } from "vue";
+
+const store = useAuthStore()
+
 </script>
 
 <template>
   <main class="min-h-screen flex relative lg:static">
-    <NavC :user="user || {}" />
+    {{ store.setUser(user) }}
+    <NavC :user="store.getUser || {}" />
     <div class="main min-h-screen flex flex-column relative flex-auto">
       <section class="homeHeader">
         <h1>The Movie List</h1>
@@ -33,6 +39,11 @@ export default {
     console.log('before mount')
     console.log('this.auth: ', this.$auth0.isAuthenticated)
     if (this.auth) {
+      // set the user with the store 
+      // console.log(store.setUser)
+      // store.setUser(this.user)
+
+
       const userExists = await fetch(`/api/api/user/${this.user.nickname}`, {
         method: "GET",
         headers: {
