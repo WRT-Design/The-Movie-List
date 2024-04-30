@@ -55,8 +55,9 @@ defineProps(['authUsername'])
     <RatingTable v-if="dbUser && sections.ml" :table-type="'rating/user?id=' + dbUser.id" class="flex w-full" />
 
     <div class="posts" v-if="sections.pl">
-      <Post v-for="post in posts" v-bind:key="post.id" :content="post.content" :postId="post.id" :name="user.name"
-        :username="user.nickname" :date="dateFormat(post.createdDate)" class="m-1 border-solid border-primary">
+      <Post v-for="post in posts" v-bind:key="post.id" :content="post.content" :postId="post.id"
+        :name="dbUser.first_name" :username="dbUser.username" :date="dateFormat(post.createdDate)"
+        class="m-1 border-solid border-primary">
       </Post>
     </div>
   </div>
