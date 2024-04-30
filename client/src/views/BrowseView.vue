@@ -14,13 +14,13 @@ const store = useAuthStore()
 </script>
 
 <template>
-  <NavC />
+  <NavC :user="store.getUser" />
   <div class="browse">
     <h1 class="text-center p-3 m-0">Explore</h1>
     <section>
       <BrowseMovieSearch class="m-3" @newRating="
-          newRating($event); visible = true
-          " :user="store.getUser" />
+    newRating($event); visible = true
+    " :user="store.getUser" />
     </section>
   </div>
 

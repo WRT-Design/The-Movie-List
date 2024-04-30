@@ -12,11 +12,16 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
 import { ref } from "vue";
+
+import { useAuthStore } from '@/stores/auth-store'
+
+const store = useAuthStore()
+
 </script>
 
 <template>
   <main>
-    <NavC />
+    <NavC :user="store.getUser" />
     <div class="main">
       <section>
         <div class="container">
@@ -36,10 +41,10 @@ import { ref } from "vue";
                 <section>
                   <b>Release Date: </b>
                   <span v-if="movie.releaseDate &&
-                movie.releaseDate.month &&
-                movie.releaseDate.day &&
-                movie.releaseDate.year
-                ">
+      movie.releaseDate.month &&
+      movie.releaseDate.day &&
+      movie.releaseDate.year
+      ">
                     {{ getMonth(movie.releaseDate.month) }}
                     {{ movie.releaseDate.day }},
                     {{ movie.releaseDate.year }}
@@ -73,9 +78,9 @@ import { ref } from "vue";
                 <section>
                   <b>Plot: </b>
                   <span v-if="movie.plot &&
-                movie.plot.plotText &&
-                movie.plot.plotText.plainText
-                ">{{ movie.plot.plotText.plainText }}</span>
+      movie.plot.plotText &&
+      movie.plot.plotText.plainText
+      ">{{ movie.plot.plotText.plainText }}</span>
                   <span v-else>None</span>
                 </section>
               </section>
@@ -111,17 +116,17 @@ import { ref } from "vue";
                 <Column field="average" header="Rating" sortable>
                   <template #body="props">
                     <StarRatings :star="props.data.average" v-tooltip.right="{
-                value: stringifyRatings(props.data),
-                autoHide: false,
-                pt: {
-                  arrow: {
-                    style: {
-                      borderRightColor: 'var(--primary-color)'
-                    }
-                  },
-                  text: 'bg-primary font-medium'
-                }
-              }" />
+      value: stringifyRatings(props.data),
+      autoHide: false,
+      pt: {
+        arrow: {
+          style: {
+            borderRightColor: 'var(--primary-color)'
+          }
+        },
+        text: 'bg-primary font-medium'
+      }
+    }" />
                   </template>
                 </Column>
                 <!-- TOOLTIP WITH OTHER RATING INFO ^^^ -->

@@ -17,7 +17,7 @@ defineProps(['authUsername'])
 </script>
 
 <template>
-  <NavC @post="newPost" @rating="newRating" />
+  <NavC :user="store.getUser" @post="newPost" @rating="newRating" />
   <div class="profile">
     <div class="p-2">
       <section class="flex p-2">

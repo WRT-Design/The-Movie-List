@@ -1,9 +1,13 @@
 <script setup>
 import NavC from "../components/NavC.vue";
+
+import { useAuthStore } from '@/stores/auth-store'
+
+const store = useAuthStore()
 </script>
 
 <template>
-  <NavC />
+  <NavC :user="store.getUser" />
   <div class="settings">
     <h1>Settings</h1>
     <h2>Your Account</h2>
