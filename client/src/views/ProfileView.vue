@@ -1,15 +1,12 @@
 <script setup>
 import NavC from "../components/NavC.vue";
 import Post from "../components/PostC.vue";
-import Rating from "../components/RatingC.vue";
 import RatingTable from "../components/RatingTable.vue";
-import PostTable from "../components/PostTable.vue";
 
 import Dialog from 'primevue/dialog';
 import Textarea from 'primevue/textarea';
 import TabMenu from 'primevue/tabmenu';
 
-import { reactive, onMounted } from "vue";
 import { ref } from "vue";
 
 import { useAuthStore } from '@/stores/auth-store'
@@ -37,15 +34,15 @@ defineProps(['authUsername'])
           <a class="plain p-3 text-white">{{ followersCount }} Followers</a>
           <a class="plain text-white">{{ followingCount }} Following</a>
         </div>
-        <Button v-if="auth && !isFollowing(store.getUser)" type="button" class="btn btn-primary btn-light m-2"
-          @click="createFollow">Follow</Button>
-        <Button v-if="auth && isFollowing(store.getUser) && userFollows()" type="button"
-          class="btn btn-primary btn-light m-2" @click="deleteFollow">Unfollow</Button>
+        <Button v-if="auth && !isFollowing(store.getUser) && store.getUser.nickname != dbUser.nickname" type="button"
+          class="btn btn-primary btn-light m-2" @click="createFollow">Follow</Button>
+        <Button v-if="auth && isFollowing(store.getUser) && userFollows() && store.getUser.nickname != dbUser.nickname"
+          type="button" class="btn btn-primary btn-light m-2" @click="deleteFollow">Unfollow</Button>
 
       </section>
       <section class="p-2">
-        <Button v-if="auth && user.nickname == dbUser.username" type="button" class="" @click="visible = true"
-          outlined>Edit
+        <Button v-if="auth && user.nickname == dbUser.username" type="button" class=""
+          @click="visible = true; console.log('click')" outlined>Edit
           Profile</Button>
         <Button class="btn btn-primary btn-light mx-2" @click="shareLink" outlined>Share Profile</Button>
       </section>
@@ -179,7 +176,6 @@ export default {
       console.log("user: ", this.user);
     },
     isFollowing(user) {
-      console.log(this.followers.some(follow => follow.follower_id == user.id))
       return this.followers.some(follow => follow.follower_id == user.id)
     },
     showSection(sec) {

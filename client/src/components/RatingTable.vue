@@ -1,6 +1,5 @@
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { ref, defineProps, onMounted } from "vue";
+import { ref, defineProps } from "vue";
 
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -132,7 +131,7 @@ export default {
   },
   data() {
     return {
-      listData: ref()
+      listData: ref([])
     }
   },
   async beforeMount() {

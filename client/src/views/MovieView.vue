@@ -26,7 +26,7 @@ import { ref } from "vue";
                 width="15%" height="auto" />
               <img v-else src="@/assets/no-poster.png" width="15%" height="auto" class="p-2" />
               <section class="flex flex-column gap-2 px-2">
-                <h2 v-if="movie.titleText.text">{{ movie.titleText.text }}</h2>
+                <h2 v-if="movie.titleText">{{ movie.titleText.text }}</h2>
                 <h2 class="flex" v-if="dbMovie && dbMovie.avg_overall">{{ dbMovie.avg_overall }}
                   <StarRatings :star="dbMovie.avg_overall" class="mx-2" />
                 </h2>
