@@ -66,7 +66,8 @@ defineProps(['user'])
                   {{ movie.plot }}</span>
                 <span v-else>No Plot Available</span>
               </p>
-              <Button v-if="user.nickname" label="Rate" icon="pi pi-star" @click="newRating($event, movie.id)"></Button>
+              <Button v-if="user && user.nickname" label="Rate" icon="pi pi-star"
+                @click="newRating($event, movie.id)"></Button>
             </div>
           </div>
         </template>
